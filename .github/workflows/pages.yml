@@ -27,6 +27,9 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run build -w @soar-awesome/storybook
+      # Fills the Component Audit page: runs every check, including axe on each
+      # story in the runner's Chrome, and copies audit.json into the built Storybook.
+      - run: npm run audit:components -- --require a11y
       - run: npm run cdn:stage
       - run: npm run build -w @soar-awesome/storybook-vue
         env:
