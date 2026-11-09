@@ -1,0 +1,14 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "checkbox" },
+  "text": "Email me about product updates",
+  "hint": "We'll send at most one email a month.",
+  "states": [
+    { "text": "Unchecked" },
+    { "text": "Checked", "checked": true },
+    { "text": "Indeterminate", "indeterminate": true },
+    { "text": "Disabled", "disabled": true },
+    { "text": "Checked and disabled", "checked": true, "disabled": true }
+  ],
+  "sizes": ["s", "m", "l"],
+  "error": { "text": "I agree to the terms", "message": "You must accept the terms to continue.", "submit": "Continue" }
+}

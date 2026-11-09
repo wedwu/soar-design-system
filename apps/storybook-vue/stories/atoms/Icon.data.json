@@ -1,0 +1,21 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "icon" },
+  "name": "house",
+  "fontSize": "2rem",
+  "common": [
+    "house", "gear", "user", "bell", "magnifying-glass", "pen",
+    "trash", "copy", "download", "circle-check", "triangle-exclamation", "circle-info"
+  ],
+  "variants": [
+    { "name": "star", "variant": "solid", "label": "Solid star" },
+    { "name": "star", "variant": "regular", "label": "Regular star" },
+    { "name": "github", "family": "brands", "label": "GitHub" }
+  ],
+  "sizes": ["var(--wa-font-size-s)", "var(--wa-font-size-m)", "var(--wa-font-size-xl)", "var(--wa-font-size-3xl)"],
+  "sizingIcon": "rocket",
+  "transforms": [
+    { "name": "arrow-right", "label": "No rotation" },
+    { "name": "arrow-right", "rotate": 90, "label": "Rotated 90°" },
+    { "name": "arrow-right", "flip": "x", "label": "Flipped horizontally" }
+  ]
+}

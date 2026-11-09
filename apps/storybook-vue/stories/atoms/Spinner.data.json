@@ -1,0 +1,6 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "spinner" },
+  "fontSize": "2rem",
+  "sizes": ["var(--wa-font-size-m)", "var(--wa-font-size-2xl)", "var(--wa-font-size-4xl)"],
+  "trackWidth": { "fontSize": "var(--wa-font-size-4xl)", "trackWidth": "var(--wa-border-width-l)" }
+}

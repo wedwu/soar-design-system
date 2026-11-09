@@ -1,0 +1,130 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SwitchStories from './Switch.stories';
+
+<Meta of={SwitchStories} />
+
+# Switch
+
+Turns a setting on or off. This is Web Awesome's `wa-switch`, loaded from the CDN and used directly in Vue templates as `<wa-switch>`, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+Use a switch for a setting that takes effect immediately. In a form that's submitted later, use a checkbox. Changes appear in the **Actions** panel.
+
+<Canvas of={SwitchStories.Playground} />
+
+<Controls />
+
+## States
+
+<Canvas of={SwitchStories.States} />
+
+## With hint
+
+`hint` adds help text under the label.
+
+<Canvas of={SwitchStories.WithHint} />
+
+## Sizes
+
+<Canvas of={SwitchStories.Sizes} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-switch>` is a custom element, not a Vue component, so `v-model` doesn't work on it. Set the starting state with `checked`, and read the current one on `change`:
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const twoFactor = ref(false);
+</script>
+
+<template>
+  <wa-switch :checked="twoFactor || undefined" @change="twoFactor = $event.target.checked">
+    Two-factor authentication
+  </wa-switch>
+</template>
+```
+
+Bind on/off attributes such as `checked`, `disabled` and `required` as `x || undefined`. If Vue renders the switch before the CDN script has loaded, it writes attributes, and `checked="false"` would still count as on.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Set the starting state with `checked`, and read the current one on `(change)`.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-two-factor',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-switch [attr.checked]="twoFactor() ? '' : null" (change)="twoFactor.set($any($event.target).checked)">
+      Two-factor authentication
+    </wa-switch>
+  `,
+})
+export class TwoFactorComponent {
+  readonly twoFactor = signal(false);
+}
+```
+
+Bind on/off attributes with `[attr.checked]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `checked="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Pass `checked`, and read the current state in `onchange` (the native event, lowercase).
+
+```jsx
+import { useState } from 'react';
+
+export function TwoFactor() {
+  const [twoFactor, setTwoFactor] = useState(false);
+
+  return (
+    <wa-switch checked={twoFactor} onchange={(event) => setTwoFactor(event.target.checked)}>
+      Two-factor authentication
+    </wa-switch>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `checked={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Read `checked` on `change`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-switch id="two-factor">Two-factor authentication</wa-switch>
+
+<script type="module">
+  const toggle = document.querySelector('#two-factor');
+  toggle.addEventListener('change', () => {
+    console.log('two-factor:', toggle.checked);
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

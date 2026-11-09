@@ -1,0 +1,168 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TreeStories from './Tree.stories';
+
+<Meta of={TreeStories} />
+
+# Tree
+
+Shows a nested hierarchy, such as folders or a workspace's sections, that users can expand and select from. This is Web Awesome's `wa-tree` with `wa-tree-item` entries, loaded from the CDN and used directly in Vue templates, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+Nest `<wa-tree-item>` elements to build the hierarchy. `expanded` opens an item, `selected` selects it and `disabled` blocks it. Listen for `wa-selection-change` to read the selected items; selections appear in the **Actions** panel.
+
+**Known upstream issue (Web Awesome 3.14.0):** `expanded` is ignored at startup on items below the top level, even in plain HTML, so "Projects" would start collapsed. These stories re-apply it once the tree has started up. In an app, set `expanded` again after mounting, or let users expand the item. Re-check after each `npm run upstream:bump`.
+
+<Canvas of={TreeStories.Playground} />
+
+<Controls />
+
+## Multiple selection
+
+`selection="multiple"` adds a checkbox to each item.
+
+**Known upstream accessibility issue (Web Awesome 3.14.0):** in `multiple` mode, the checkboxes the tree item renders in its shadow DOM have no accessible label. This is inside Web Awesome, so Soar doesn't patch it. Selection state is still exposed through the tree items. Re-check after each `npm run upstream:bump`.
+
+<Canvas of={TreeStories.Multiple} />
+
+## With icons
+
+Put a `<wa-icon>` before an item's text.
+
+<Canvas of={TreeStories.WithIcons} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Render nested items with a small recursive component, and read the selection from `wa-selection-change`:
+
+```vue
+<script setup>
+function onSelectionChange(event) {
+  const selected = event.detail.selection; // the selected <wa-tree-item> elements
+}
+</script>
+
+<template>
+  <wa-tree @wa-selection-change="onSelectionChange">
+    <wa-tree-item expanded>
+      Projects
+      <wa-tree-item>Apollo</wa-tree-item>
+      <wa-tree-item>Gemini</wa-tree-item>
+    </wa-tree-item>
+  </wa-tree>
+</template>
+```
+
+Bind `expanded`, `selected` and `disabled` as `x || undefined`. If Vue renders the tree before the CDN script has loaded, it writes attributes, and `expanded="false"` would still count as expanded.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Listen with `(wa-selection-change)`. Give each item a `data-id` so the handler knows which ones were chosen.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-project-tree',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-tree (wa-selection-change)="onSelectionChange($event)">
+      <wa-tree-item expanded>
+        Projects
+        <wa-tree-item data-id="apollo">Apollo</wa-tree-item>
+        <wa-tree-item data-id="gemini" [attr.disabled]="archived() ? '' : null">Gemini</wa-tree-item>
+      </wa-tree-item>
+    </wa-tree>
+    <p>Selected: {{ selected().join(', ') }}</p>
+  `,
+})
+export class ProjectTreeComponent {
+  readonly selected = signal<string[]>([]);
+  readonly archived = signal(false);
+
+  onSelectionChange(event: Event) {
+    const { selection } = (event as CustomEvent<{ selection: HTMLElement[] }>).detail;
+    this.selected.set(selection.map((item) => item.dataset['id'] ?? ''));
+  }
+}
+```
+
+Bind on/off attributes with `[attr.disabled]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `disabled="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Listen with `onwa-selection-change` (the event's exact name after `on`).
+
+```jsx
+import { useState } from 'react';
+
+export function ProjectTree() {
+  const [selected, setSelected] = useState([]);
+  const [archived, setArchived] = useState(false);
+
+  return (
+    <>
+      <wa-tree onwa-selection-change={(event) => setSelected(event.detail.selection.map((item) => item.dataset.id))}>
+        <wa-tree-item expanded>
+          Projects
+          <wa-tree-item data-id="apollo">Apollo</wa-tree-item>
+          <wa-tree-item data-id="gemini" disabled={archived}>Gemini</wa-tree-item>
+        </wa-tree-item>
+      </wa-tree>
+      <p>Selected: {selected.join(', ')}</p>
+    </>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `disabled={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Listen for `wa-selection-change`; on/off attributes are added or removed, never set to `"false"`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-tree id="projects">
+  <wa-tree-item expanded>
+    Projects
+    <wa-tree-item data-id="apollo">Apollo</wa-tree-item>
+    <wa-tree-item data-id="gemini">Gemini</wa-tree-item>
+  </wa-tree-item>
+</wa-tree>
+<output id="selected"></output>
+
+<script type="module">
+  const tree = document.querySelector('#projects');
+  const output = document.querySelector('#selected');
+
+  tree.addEventListener('wa-selection-change', (event) => {
+    const ids = event.detail.selection.map((item) => item.dataset.id);
+    output.textContent = `Selected: ${ids.join(', ')}`;
+  });
+
+  document.querySelector('[data-id="gemini"]').toggleAttribute('disabled', true);
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

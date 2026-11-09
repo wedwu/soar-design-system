@@ -1,0 +1,18 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "button" },
+  "text": "Save changes",
+  "variants": ["brand", "neutral", "success", "warning", "danger"],
+  "appearances": ["accent", "filled", "outlined", "filled-outlined", "plain"],
+  "sizes": ["s", "m", "l"],
+  "states": [
+    { "text": "Disabled", "variant": "brand", "disabled": true },
+    { "text": "Loading", "variant": "brand", "loading": true },
+    { "text": "With caret", "with-caret": true },
+    { "text": "Pill", "variant": "brand", "pill": true }
+  ],
+  "withIcons": [
+    { "text": "Save", "variant": "brand", "start": "floppy-disk" },
+    { "text": "Next", "end": "arrow-right" },
+    { "icon": "gear", "iconLabel": "Settings", "appearance": "plain" }
+  ]
+}

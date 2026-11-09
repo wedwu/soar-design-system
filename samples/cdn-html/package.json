@@ -1,0 +1,10 @@
+{
+  "name": "sample-cdn-html",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m http.server 5000 -d ../.."
+  },
+  "devDependencies": {
+    "@soar-awesome/cdn": "*"
+  }
+}

@@ -1,0 +1,146 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as BreadcrumbStories from './Breadcrumb.stories';
+
+<Meta of={BreadcrumbStories} />
+
+# Breadcrumb
+
+Shows a trail of links to where the user is in the site's hierarchy. This is Web Awesome's `wa-breadcrumb` with `wa-breadcrumb-item` links, loaded from the CDN and used directly in Vue templates, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+Always set `label`. Screen readers announce it to describe the navigation landmark. The last item has no `href`, because it's the current page.
+
+<Canvas of={BreadcrumbStories.Playground} />
+
+<Controls />
+
+## Custom separator
+
+Put an icon in the `separator` slot to replace the default slash.
+
+<Canvas of={BreadcrumbStories.CustomSeparator} />
+
+## With icons
+
+An icon-only item puts the icon in the **default** slot with a `label`, which becomes the link's accessible name. An icon in the `start` slot is decorative and sits next to the item's text.
+
+<Canvas of={BreadcrumbStories.WithIcons} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Breadcrumb items are plain links, so they work with any router: set `href` to the route's URL. To handle navigation in Vue instead, listen for `click` on the item and call your router.
+
+```vue
+<script setup>
+const trail = [
+  { text: 'Home', href: '/' },
+  { text: 'Projects', href: '/projects' },
+  { text: 'Apollo' },
+];
+</script>
+
+<template>
+  <wa-breadcrumb label="Breadcrumb">
+    <wa-breadcrumb-item v-for="crumb in trail" :key="crumb.text" :href="crumb.href">{{ crumb.text }}</wa-breadcrumb-item>
+  </wa-breadcrumb>
+</template>
+```
+
+Leave `href` off the current page: Vue drops an attribute bound to `undefined`.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Items are plain links, so `href` works with any router. Leave `href` off the current page.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-project-breadcrumb',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-breadcrumb label="Breadcrumb">
+      @for (crumb of trail; track crumb.text) {
+        <wa-breadcrumb-item [attr.href]="crumb.href ?? null">{{ crumb.text }}</wa-breadcrumb-item>
+      }
+    </wa-breadcrumb>
+  `,
+})
+export class ProjectBreadcrumbComponent {
+  readonly trail = [
+    { text: 'Home', href: '/' },
+    { text: 'Projects', href: '/projects' },
+    { text: 'Apollo' },
+  ];
+}
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Items are plain links; leave `href` off the current page.
+
+```jsx
+const trail = [
+  { text: 'Home', href: '/' },
+  { text: 'Projects', href: '/projects' },
+  { text: 'Apollo' },
+];
+
+export function ProjectBreadcrumb() {
+  return (
+    <wa-breadcrumb label="Breadcrumb">
+      {trail.map((crumb) => (
+        <wa-breadcrumb-item key={crumb.text} href={crumb.href}>{crumb.text}</wa-breadcrumb-item>
+      ))}
+    </wa-breadcrumb>
+  );
+}
+```
+
+In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. The items are links already; no script is needed unless you route in JavaScript.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-breadcrumb label="Breadcrumb">
+  <wa-breadcrumb-item href="/">Home</wa-breadcrumb-item>
+  <wa-breadcrumb-item href="/projects">Projects</wa-breadcrumb-item>
+  <wa-breadcrumb-item>Apollo</wa-breadcrumb-item>
+</wa-breadcrumb>
+
+<script type="module">
+  // Optional: route in JavaScript instead of loading a new page.
+  document.querySelectorAll('wa-breadcrumb-item[href]').forEach((item) => {
+    item.addEventListener('click', (event) => {
+      event.preventDefault();
+      history.pushState({}, '', item.getAttribute('href'));
+    });
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

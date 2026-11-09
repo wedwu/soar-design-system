@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+
+      # Upstream: installed Web Awesome must match the reviewed snapshot.
+      - run: npm run upstream:check
+      # Figma: generated CSS must match figma/export.json + alias-map (no hand edits).
+      - run: npm run tokens:check
+      # Fast component audit (everything except the browser check): fail early.
+      - run: npm run check:ownership
+      - run: npm run test:tools
+      # Nothing may be published to a registry (apps install our tarball).
+      - run: npm run check:private
+
+      - run: npm run build
+      - run: npm test
+      - run: npm run build -w @soar-awesome/storybook
+
+      # Full component audit, including axe on every story. Uses the Chrome that
+      # GitHub's Ubuntu runners already have; nothing is downloaded. --require
+      # makes it fail (not skip) if that browser is ever missing.
+      - run: npm run audit:components -- --require a11y
+      - if: always()
+        run: cat reports/audit.md >> "$GITHUB_STEP_SUMMARY"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: component-audit, path: reports/ }
+
+      # Uploaded after the audit, so the Storybook includes the Component Audit page data.
+      - uses: actions/upload-artifact@v4
+        with: { name: storybook, path: apps/storybook/storybook-static }

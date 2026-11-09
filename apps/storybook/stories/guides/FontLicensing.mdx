@@ -1,0 +1,79 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { WA_VERSION } from '../../src/catalog';
+
+<Meta title="Guides/Font Licensing" />
+
+# Font licensing
+
+This page lists the fonts, icons and libraries the design system relies on, their licenses, and what those licenses ask of you. It's a practical summary, **not legal advice**. When in doubt, read the license itself or ask your legal team.
+
+## Typefaces
+
+The Figma tokens name these families (`--wa-font-family-body`, `-heading` and `-code`):
+
+<table>
+  <thead>
+    <tr><th>Typeface</th><th>Used for</th><th>License</th><th>Shipped by Soar?</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Inter</strong></td><td>Body and headings</td><td><a href="https://openfontlicense.org" target="_blank" rel="noreferrer">SIL Open Font License 1.1</a></td><td>No</td></tr>
+    <tr><td><strong>JetBrains Mono</strong></td><td>Code</td><td><a href="https://openfontlicense.org" target="_blank" rel="noreferrer">SIL Open Font License 1.1</a></td><td>No</td></tr>
+  </tbody>
+</table>
+
+**Soar doesn't bundle font files.** The tokens list fallbacks (`ui-sans-serif, system-ui, sans-serif` and `ui-monospace, monospace`). If an app doesn't load Inter or JetBrains Mono, text falls back to the device's system fonts. Nothing breaks, but it won't match Figma exactly.
+
+### Loading the fonts in your app
+
+Either option is fine under the OFL:
+
+- **npm:** `@fontsource/inter` and `@fontsource/jetbrains-mono` (both OFL 1.1). Import the weights you need, which are the token weights: light 300, normal 400, semibold 550, bold 650. Inter is a variable font, so all of these come from one file.
+- **Self-host:** copy the font files next to Soar's self-hosted CDN and add `@font-face` rules. Keep the `OFL.txt` license file alongside them.
+
+### What the SIL Open Font License 1.1 allows
+
+- **Free** for any use, commercial included: websites, apps, products, documents.
+- You **may** bundle, embed and redistribute the fonts with your software.
+- You **may not** sell the font files on their own.
+- **Keep** the copyright notice and license with the font files when you redistribute them.
+- If you **modify** a font, the modified version can't use the original's *Reserved Font Name*, and must stay under the OFL.
+
+## Icons
+
+`<wa-icon>` uses **Font Awesome Free** by default, loaded from Font Awesome's public CDN (see the Icon atom page for self-hosting).
+
+<table>
+  <thead>
+    <tr><th>Part of Font Awesome Free</th><th>License</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Icons (the SVG artwork)</td><td><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></td></tr>
+    <tr><td>Icon fonts</td><td>SIL OFL 1.1</td></tr>
+    <tr><td>Code</td><td>MIT</td></tr>
+  </tbody>
+</table>
+
+- **CC BY 4.0 requires attribution.** Font Awesome's Free files already carry that attribution in comments inside each file. **Don't strip those comments** when self-hosting or optimizing SVGs, and you don't need to add anything else.
+- **Font Awesome Pro icons, and the Pro families** (`sharp`, `duotone` and others), need a paid Font Awesome license. Only use `family` and `variant` values that are included in Free unless Soar has a Pro license.
+- **Other icon sets** you register with `registerIconLibrary()` come with their own licenses. Check each one before shipping it.
+
+## Libraries
+
+<table>
+  <thead>
+    <tr><th>Package</th><th>License</th><th>What it asks</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Web Awesome {WA_VERSION} (© Fonticons, Inc.)</td><td>MIT</td><td>Keep the copyright and license notice in copies of the software. The npm package's `LICENSE.md` covers this.</td></tr>
+    <tr><td>Lit</td><td>BSD-3-Clause</td><td>Keep the copyright notice. Don't use the authors' names to endorse your product.</td></tr>
+  </tbody>
+</table>
+
+The self-hosted CDN bundle keeps the license comments of the code it includes (esbuild's `legalComments: 'eof'` setting puts them at the end of the file).
+
+## Checklist before shipping
+
+- Fonts you self-host are kept together with their `OFL.txt`.
+- Font Awesome SVGs you self-host still contain their attribution comments.
+- You use only Free icon families and variants, unless there's a Pro license.
+- Any extra icon library has its license checked.

@@ -1,0 +1,45 @@
+{
+  "name": "soar-awesome-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "samples/*"
+  ],
+  "packageManager": "npm@10.9.3",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build --filter=./packages/*",
+    "build:all": "turbo run build --filter=./packages/* --filter=./apps/* --filter=!@soar-awesome/storybook-vue",
+    "test": "turbo run test",
+    "verify": "npm run tokens && npm run check:ownership && npm test",
+    "storybook": "turbo run dev --filter=@soar-awesome/storybook",
+    "storybook:vue": "npm run build && npm run cdn:stage && npm run dev -w @soar-awesome/storybook-vue",
+    "tokens": "npm run build -w @soar-awesome/tokens && npm run generate -w @soar-awesome/theme",
+    "tokens:check": "npm run tokens && git diff --exit-code -- packages/theme/src packages/tokens/figma",
+    "figma:pull": "node tools/figma-sync/pull.mjs",
+    "check:ownership": "node tools/audit/manager.mjs --skip a11y",
+    "upstream:check": "node tools/upstream-bump/bump.mjs --check",
+    "upstream:bump": "node tools/upstream-bump/bump.mjs",
+    "changeset": "changeset",
+    "release": "npm run build && npm run cdn:stage",
+    "cdn:stage": "node tools/release/stage-cdn.mjs",
+    "audit:components": "node tools/audit/manager.mjs",
+    "audit:full": "npm run build:all && node tools/audit/manager.mjs",
+    "test:tools": "node --test tools/audit/test/audit.test.mjs",
+    "check:private": "node tools/release/check-private.mjs"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "axe-core": "4.14.0",
+    "playwright-core": "^1.64.0",
+    "turbo": "^2.11.7",
+    "typescript": "~5.9.3"
+  },
+  "overrides": {
+    "@awesome.me/webawesome": "3.14.0"
+  }
+}

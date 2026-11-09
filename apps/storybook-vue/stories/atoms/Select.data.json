@@ -1,0 +1,29 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "select" },
+  "label": "Region",
+  "hint": "Where your data is stored",
+  "options": [
+    { "value": "us", "text": "United States", "selected": true },
+    { "value": "eu", "text": "European Union" },
+    { "value": "uk", "text": "United Kingdom" },
+    { "value": "apac", "text": "Asia-Pacific (coming soon)", "disabled": true }
+  ],
+  "multiple": {
+    "label": "Notify me about",
+    "options": [
+      { "value": "invoices", "text": "Invoices", "selected": true },
+      { "value": "mentions", "text": "Mentions", "selected": true },
+      { "value": "deploys", "text": "Deploys" },
+      { "value": "billing", "text": "Billing" }
+    ]
+  },
+  "placeholder": {
+    "label": "Region",
+    "placeholder": "Choose a region",
+    "options": [
+      { "value": "us", "text": "United States" },
+      { "value": "eu", "text": "European Union" },
+      { "value": "uk", "text": "United Kingdom" }
+    ]
+  }
+}

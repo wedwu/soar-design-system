@@ -1,0 +1,70 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Terms" />
+
+# Terms
+
+Plain-language definitions of the words used across these docs and the repo.
+
+## The design system
+
+| Term | Meaning |
+|---|---|
+| **Design system** | A shared set of components, styles and rules that products build from, so they look and behave consistently. |
+| **Atomic design** | A way of organizing components from smallest to largest: atoms, then molecules, then organisms. |
+| **Atom** | The smallest useful component, such as a button, input or checkbox. In Soar, atoms are Web Awesome components restyled with Soar's tokens. |
+| **Molecule** | A small combination of atoms that does one job, such as `ax-field` (an input with Soar's validation behavior). Built by Soar. |
+| **Organism** | A larger component made of molecules and atoms, such as `ax-data-table`. Built by Soar. |
+| **Foundations** | The basic visual values everything else uses: color, spacing, shape, type and motion. |
+| **Upstream** | Web Awesome, the library Soar is built on. "Upstream changes" means a new Web Awesome release. |
+
+## Design tokens
+
+| Term | Meaning |
+|---|---|
+| **Design token** | A named design value, such as `--ax-color-brand-50` or `--wa-space-m`, used instead of a raw value like `#495bd7` or `16px`. Changing the token changes every place that uses it. |
+| **Figma variable** | A design token defined in Figma. Soar's Figma variables are the **only** source of visual values. The repo copies them into code; it never invents them. |
+| **Primitive token** | A raw value with no meaning attached, such as "brand color, step 50" (`color/brand/50`). |
+| **Semantic token** | A token named for its purpose, such as "text on a loud brand fill" (`color/brand/on-loud`). It points at a primitive, and can point at different primitives in light and dark mode. |
+| **Mode** | A set of values a token can switch between. Soar's semantic colors have **Light** and **Dark** modes. |
+| **Owned property** | A Web Awesome token whose value Soar sets from Figma. It's listed in `alias-map.mjs`. |
+| **Inherited property** | A Web Awesome token where Soar keeps Web Awesome's default value. It's listed in `inherited.json`. If Web Awesome changes that default, the upgrade report flags it. |
+| **Alias map** | The file (`packages/tokens/src/alias-map.mjs`) that says which Figma variable sets which Web Awesome token. |
+
+## Web components
+
+| Term | Meaning |
+|---|---|
+| **Web component / custom element** | A reusable HTML element you define yourself, such as `<wa-button>` or `<ax-field>`. Custom elements are built into browsers, so they work in any framework or none. |
+| **Shadow DOM** | A component's private interior. Page CSS can't reach in, and component CSS can't leak out. |
+| **Light DOM** | The ordinary page content you write inside a component's tag. It's what fills slots. |
+| **Slot** | A named place inside a component for your own content. See [Slots](?path=/docs/guides-slots--docs). |
+| **CSS shadow part** | An element inside a component's shadow DOM that the component exposes for styling with `::part()`. See [CSS Shadow Parts](?path=/docs/guides-css-shadow-parts--docs). |
+| **CSS custom property** | A CSS variable, such as `--wa-color-text-normal` or `--size`. Design tokens are delivered as custom properties, and components expose their own for adjusting their styles. |
+| **Cascade layer** | A named priority level for CSS (`@layer`). Later layers win over earlier ones regardless of selector strength. Soar's styles sit in layers after Web Awesome's, so they win without `!important`. An app's unlayered CSS still beats both. |
+| **Form-associated element** | A custom element that takes part in a page's `<form>`, submitting its value and blocking submit when invalid, just like a native input. `ax-field` is one. |
+| **Custom Elements Manifest** | A standard JSON file (`custom-elements.json`) describing every element's attributes, slots, events and parts. These docs generate their tables from it. |
+
+## Building and shipping
+
+| Term | Meaning |
+|---|---|
+| **npm package** | A versioned bundle of code installed with a package manager. Soar publishes four packages: `tokens`, `theme`, `components` and `cdn`. |
+| **Tarball** | A `.tgz` file holding an npm package. Soar ships one, `@soar-awesome/soar`, on its own server instead of publishing to a registry, and apps install it by URL. |
+| **CDN bundle** | A single ready-to-use JavaScript file that pages load with a `<script>` tag, with no build step. Soar hosts its own. |
+| **Autoloader** | Code in the CDN bundle that notices Soar components on the page and asks Web Awesome to load the parts they need. |
+| **Monorepo / workspace** | One repository holding several packages that are developed and versioned together. Managed with **npm workspaces**. |
+| **Turborepo** | The tool that builds the packages in the right order and skips work that hasn't changed (caching). |
+| **Changeset** | A short note, added with a pull request, saying which packages changed and how much (patch, minor or major). Changesets become version numbers and changelog entries. |
+| **Semantic versioning (patch / minor / major)** | Version numbers that signal the size of a change. A patch fixes something, a minor adds something, and a major may break something. |
+| **Snapshot** | A saved record of Web Awesome's tokens and parts at the last reviewed upgrade. Upgrades are compared against it, so nothing changes unnoticed. |
+| **Ownership audit** | The automated check (`npm run check:ownership`) that enforces the system's rules: every token is classified, there are no raw values, every part exists, and so on. |
+
+## Accessibility
+
+| Term | Meaning |
+|---|---|
+| **Accessibility (a11y)** | Making products usable by everyone, including people using screen readers, keyboards or magnification. |
+| **WCAG AA contrast** | The minimum contrast between text and its background for readable text: 4.5:1 for normal text. Soar's tests check every text color on every fill. |
+| **Accessible name** | What a screen reader announces for an element, such as "Select INV-1042" for a checkbox. Every control needs one. |
+| **axe** | The automated accessibility checker behind the **Accessibility** panel on each story. |

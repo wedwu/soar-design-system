@@ -1,0 +1,19 @@
+{
+  "name": "sample-vue-vite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@soar-awesome/soar": "*",
+    "@awesome.me/webawesome": "3.14.0",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.9",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.4"
+  }
+}

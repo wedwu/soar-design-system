@@ -1,0 +1,7 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "tooltip" },
+  "text": "Copy invoice link",
+  "target": { "icon": "link", "label": "Copy invoice link" },
+  "clickText": "Click again to close",
+  "placements": ["top", "right", "bottom", "left"]
+}

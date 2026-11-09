@@ -1,0 +1,183 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DropdownStories from './Dropdown.stories';
+
+<Meta of={DropdownStories} />
+
+# Dropdown
+
+Shows a menu of options from a button. This is Web Awesome's `wa-dropdown` with `wa-dropdown-item` options, loaded from the CDN and used directly in Vue templates, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+Put the button in the `trigger` slot. Choosing an item fires `wa-select`; read the item from `event.detail.item`. Selections appear in the **Actions** panel. What not to put inside a dropdown is under [Dropdown limitations](#dropdown-limitations) below; Web Awesome's own behavioral constraints are on the main Storybook's **Dropdown Limitations** page.
+
+<Canvas of={DropdownStories.Playground} />
+
+<Controls />
+
+## Checkable items
+
+`type="checkbox"` turns an item into a toggle, for example for view options. `checked` sets its starting state.
+
+<Canvas of={DropdownStories.CheckableItems} />
+
+## Submenu
+
+Put items in another item's `submenu` slot to nest them.
+
+<Canvas of={DropdownStories.Submenu} />
+
+## Dropdown limitations
+
+**Only `<wa-dropdown-item>` and `<wa-divider>` go inside `<wa-dropdown>`** (plus the button in the `trigger` slot). The dropdown only manages its own items: it moves focus to them, lets the arrow keys walk through them, fires `wa-select` and closes. Anything else is invisible to it.
+
+Each mistake below is built for real, next to the fix. Open each menu, click an item and try the arrow keys; the line under the menu reports what happened.
+
+### Plain links
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(18rem, 1fr))', gap: 'var(--wa-space-l)' }}>
+  <div>
+    <wa-callout variant="danger" appearance="outlined">
+      **Don't:** put `<a href>` elements in the menu.
+      Focus stays on the page when it opens, arrow keys can't reach the links, no `wa-select` fires, and the menu stays open after a click. Screen readers don't announce them as menu items.
+    </wa-callout>
+    <Canvas of={DropdownStories.DontPlainLinks} />
+  </div>
+  <div>
+    <wa-callout variant="success" appearance="outlined">
+      **Do:** use `<wa-dropdown-item href="…">`.
+      It still navigates, and it's a real menu item: focusable, reachable with the arrow keys, fires `wa-select` and closes the menu.
+    </wa-callout>
+    <Canvas of={DropdownStories.DoLinkItems} />
+  </div>
+</div>
+
+### Lists
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(18rem, 1fr))', gap: 'var(--wa-space-l)' }}>
+  <div>
+    <wa-callout variant="danger" appearance="outlined">
+      **Don't:** wrap the items in a `<ul>` / `<li>` list, even with `<wa-dropdown-item>` inside.
+      Mouse clicks still work, which makes this easy to miss. But focus doesn't move into the menu when it opens, the arrow keys can't reach the items, and screen readers find a list inside the menu instead of menu items.
+    </wa-callout>
+    <Canvas of={DropdownStories.DontList} />
+  </div>
+  <div>
+    <wa-callout variant="success" appearance="outlined">
+      **Do:** put the items directly inside the dropdown, and separate groups with `<wa-divider>`.
+      Every item is reachable and fires `wa-select`, and the divider is announced as a separator.
+    </wa-callout>
+    <Canvas of={DropdownStories.DoItemsAndDivider} />
+  </div>
+</div>
+
+Web Awesome's own behavioral constraints, such as selection closing the menu and submenu parents never selecting, are on the main Storybook's **Dropdown Limitations** page.
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Listen for `wa-select` on the dropdown and read the chosen item's `value`:
+
+```vue
+<script setup>
+function onSelect(event) {
+  const value = event.detail.item.value; // "edit", "duplicate", ...
+}
+</script>
+
+<template>
+  <wa-dropdown @wa-select="onSelect">
+    <wa-button slot="trigger" with-caret>Actions</wa-button>
+    <wa-dropdown-item value="edit">Edit</wa-dropdown-item>
+    <wa-dropdown-item value="delete" variant="danger">Delete</wa-dropdown-item>
+  </wa-dropdown>
+</template>
+```
+
+Bind on/off attributes such as `disabled` and `checked` as `x || undefined`. If Vue renders the menu before the CDN script has loaded, it writes attributes, and `disabled="false"` would still count as disabled.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Listen for `(wa-select)` and read the chosen item's `value`.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-actions-menu',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-dropdown (wa-select)="onSelect($event)">
+      <wa-button slot="trigger" with-caret>Actions</wa-button>
+      <wa-dropdown-item value="edit">Edit</wa-dropdown-item>
+      <wa-dropdown-item value="delete" variant="danger">Delete</wa-dropdown-item>
+    </wa-dropdown>
+  `,
+})
+export class ActionsMenuComponent {
+  onSelect(event: Event) {
+    const { item } = (event as CustomEvent<{ item: { value: string } }>).detail;
+    console.log('chosen:', item.value);
+  }
+}
+```
+
+Bind on/off attributes with `[attr.disabled]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `disabled="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Listen with `onwa-select` and read the chosen item's `value`.
+
+```jsx
+export function ActionsMenu({ onAction }) {
+  return (
+    <wa-dropdown onwa-select={(event) => onAction(event.detail.item.value)}>
+      <wa-button slot="trigger" with-caret>Actions</wa-button>
+      <wa-dropdown-item value="edit">Edit</wa-dropdown-item>
+      <wa-dropdown-item value="delete" variant="danger">Delete</wa-dropdown-item>
+    </wa-dropdown>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `disabled={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Listen for `wa-select` and read `event.detail.item.value`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-dropdown id="actions">
+  <wa-button slot="trigger" with-caret>Actions</wa-button>
+  <wa-dropdown-item value="edit">Edit</wa-dropdown-item>
+  <wa-dropdown-item value="delete" variant="danger">Delete</wa-dropdown-item>
+</wa-dropdown>
+
+<script type="module">
+  document.querySelector('#actions').addEventListener('wa-select', (event) => {
+    console.log('chosen:', event.detail.item.value);
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

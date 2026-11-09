@@ -1,0 +1,36 @@
+{
+  "name": "@soar-awesome/theme",
+  "version": "0.1.0",
+  "description": "Web Awesome, retokenized from Soar's Figma variables. The atoms layer: stylesheets only, no components.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "style": "./dist/soar.css",
+  "exports": {
+    ".": "./dist/soar.css",
+    "./soar.css": "./dist/soar.css",
+    "./tokens.css": "./dist/tokens.css",
+    "./light.css": "./dist/light.css",
+    "./dark.css": "./dist/dark.css",
+    "./webawesome.css": "./dist/webawesome.css",
+    "./parts.css": "./dist/parts.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "build": "node scripts/generate.mjs && node scripts/build.mjs"
+  },
+  "peerDependencies": {
+    "@awesome.me/webawesome": "~3.14.0"
+  },
+  "devDependencies": {
+    "@soar-awesome/tokens": "*",
+    "@awesome.me/webawesome": "3.14.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "drawer" },
+  "trigger": "Open drawer",
+  "label": "Invoice INV-1043",
+  "body": [
+    "Contoso · Due 2026-09-15",
+    "This invoice is 23 days overdue. Send a reminder or mark it as paid."
+  ],
+  "headerActions": [
+    { "icon": "print", "label": "Print invoice" },
+    { "icon": "arrow-up-right-from-square", "label": "Open in a new window" }
+  ],
+  "actions": [
+    { "text": "Cancel", "appearance": "plain" },
+    { "text": "Send reminder", "variant": "brand" }
+  ]
+}

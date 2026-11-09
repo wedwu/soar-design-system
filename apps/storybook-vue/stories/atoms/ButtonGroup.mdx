@@ -1,0 +1,143 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonGroupStories from './ButtonGroup.stories';
+
+<Meta of={ButtonGroupStories} />
+
+# Button group
+
+Joins related buttons into one unit, such as a toolbar or a segmented control. This is Web Awesome's `wa-button-group`, loaded from the CDN and used directly in Vue templates as `<wa-button-group>`, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+Always set `label`. Screen readers announce it to describe the group. Clicks appear in the **Actions** panel.
+
+<Canvas of={ButtonGroupStories.Playground} />
+
+<Controls />
+
+## Vertical
+
+`orientation="vertical"` stacks the buttons.
+
+<Canvas of={ButtonGroupStories.Vertical} />
+
+## Icon toolbar
+
+Icon-only buttons put the icon in the default slot with a `label`, which becomes each button's accessible name.
+
+<Canvas of={ButtonGroupStories.IconToolbar} />
+
+## Split button
+
+A main action plus a dropdown of related ones. The dropdown's trigger joins the group. Menu choices appear in the **Actions** panel as `wa-select`.
+
+<Canvas of={ButtonGroupStories.SplitButton} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-button-group>` has no events of its own; handle `@click` on each button as usual:
+
+```vue
+<template>
+  <wa-button-group label="Alignment">
+    <wa-button @click="align('left')">Left</wa-button>
+    <wa-button @click="align('center')">Center</wa-button>
+    <wa-button @click="align('right')">Right</wa-button>
+  </wa-button-group>
+</template>
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. The group has no events of its own; handle `(click)` on each button.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-alignment-group',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-button-group label="Alignment">
+      @for (option of options; track option) {
+        <wa-button [attr.variant]="align() === option ? 'brand' : null" (click)="align.set(option)">{{ option }}</wa-button>
+      }
+    </wa-button-group>
+  `,
+})
+export class AlignmentGroupComponent {
+  readonly options = ['Left', 'Center', 'Right'];
+  readonly align = signal('Left');
+}
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. The group has no events of its own; handle `onClick` on each button.
+
+```jsx
+import { useState } from 'react';
+
+const options = ['Left', 'Center', 'Right'];
+
+export function AlignmentGroup() {
+  const [align, setAlign] = useState('Left');
+
+  return (
+    <wa-button-group label="Alignment">
+      {options.map((option) => (
+        <wa-button key={option} variant={align === option ? 'brand' : undefined} onClick={() => setAlign(option)}>
+          {option}
+        </wa-button>
+      ))}
+    </wa-button-group>
+  );
+}
+```
+
+In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Listen once on the group and find which button was clicked.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-button-group id="alignment" label="Alignment">
+  <wa-button variant="brand">Left</wa-button>
+  <wa-button>Center</wa-button>
+  <wa-button>Right</wa-button>
+</wa-button-group>
+
+<script type="module">
+  const group = document.querySelector('#alignment');
+  group.addEventListener('click', (event) => {
+    const clicked = event.target.closest('wa-button');
+    if (!clicked) return;
+    for (const button of group.querySelectorAll('wa-button')) button.removeAttribute('variant');
+    clicked.setAttribute('variant', 'brand');
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

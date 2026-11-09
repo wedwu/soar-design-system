@@ -1,0 +1,37 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "tree" },
+  "items": [
+    {
+      "text": "Workspace",
+      "expanded": true,
+      "children": [
+        {
+          "text": "Projects",
+          "expanded": true,
+          "children": [
+            { "text": "Apollo", "selected": true },
+            { "text": "Gemini" },
+            { "text": "Mercury (archived)", "disabled": true }
+          ]
+        },
+        {
+          "text": "Billing",
+          "children": [{ "text": "Invoices" }, { "text": "Payment methods" }]
+        }
+      ]
+    },
+    { "text": "Personal" }
+  ],
+  "withIcons": [
+    {
+      "text": "Documents",
+      "icon": "folder",
+      "expanded": true,
+      "children": [
+        { "text": "Contract.pdf", "icon": "file-pdf" },
+        { "text": "Forecast.xlsx", "icon": "file-excel" }
+      ]
+    },
+    { "text": "Photos", "icon": "folder" }
+  ]
+}

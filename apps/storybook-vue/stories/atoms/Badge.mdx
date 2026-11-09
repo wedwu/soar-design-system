@@ -1,0 +1,138 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as BadgeStories from './Badge.stories';
+
+<Meta of={BadgeStories} />
+
+# Badge
+
+Draws attention to nearby content with a status, count or short label. This is Web Awesome's `wa-badge`, loaded from the CDN and used directly in Vue templates as `<wa-badge>`, exactly as on a CDN page.
+
+There are no component-specific changes. Colors come from the Soar brand, neutral, success, warning and danger ramps.
+
+<Canvas of={BadgeStories.Playground} />
+
+<Controls />
+
+## Variants and appearances
+
+`variant` sets the color ramp, and `appearance` how strongly it's applied.
+
+<Canvas of={BadgeStories.Variants} />
+
+## Pill
+
+`pill` rounds the ends, which suits counts.
+
+<Canvas of={BadgeStories.Pill} />
+
+## Attention
+
+`attention="pulse"` or `"bounce"` animates the badge to draw the eye, for example on a new notification. Use it sparingly. Put a badge in a button's `end` slot to attach it to the button.
+
+<Canvas of={BadgeStories.Attention} />
+
+## Start and end decorations
+
+Put an icon, or any element, in the `start` slot to show it before the text, or in the `end` slot to show it after. The badge spaces it from the text and sizes a `<wa-icon>` to match.
+
+<Canvas of={BadgeStories.Decorations} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const unread = ref(4);
+const rounded = ref(true);
+</script>
+
+<template>
+  <wa-button appearance="outlined">
+    Inbox
+    <wa-badge slot="end" variant="brand" :pill="rounded || undefined">{{ unread }}</wa-badge>
+  </wa-button>
+</template>
+```
+
+Bind `pill` as `pill || undefined`. If Vue renders the badge before the CDN script has loaded, it writes attributes, and `pill="false"` would still count as on.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Bind the count like any text. Put the badge in a button's `end` slot to attach it to the button.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-inbox-badge',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-button appearance="outlined">
+      Inbox
+      <wa-badge slot="end" variant="brand" [attr.pill]="rounded() ? '' : null">{{ unread() }}</wa-badge>
+    </wa-button>
+  `,
+})
+export class InboxBadgeComponent {
+  readonly unread = signal(4);
+  readonly rounded = signal(true);
+}
+```
+
+Bind on/off attributes with `[attr.pill]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `pill="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Pass the count as children and `pill` as a boolean.
+
+```jsx
+export function InboxBadge({ unread = 4, rounded = true }) {
+  return (
+    <wa-button appearance="outlined">
+      Inbox
+      <wa-badge slot="end" variant="brand" pill={rounded}>{unread}</wa-badge>
+    </wa-button>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `pill={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Update the count by setting the badge's text.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-button appearance="outlined">
+  Inbox
+  <wa-badge id="unread" slot="end" variant="brand" pill>4</wa-badge>
+</wa-button>
+
+<script type="module">
+  const badge = document.querySelector('#unread');
+  badge.textContent = '5';
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

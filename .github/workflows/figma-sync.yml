@@ -1,0 +1,40 @@
+name: Figma sync
+
+# Opens (or updates) a PR whenever Figma variables change. Designers publish in
+# Figma, and this turns the change into a reviewable diff of export.json and the
+# generated CSS, with a report of which WA properties are affected.
+# In this public showcase there is no Figma file connected, so the schedule is
+# off and the workflow only runs by hand. A real setup enables the cron line.
+on:
+  # schedule: [{ cron: '0 6 * * 1-5' }]
+  workflow_dispatch:
+  # repository_dispatch:
+  #   types: [figma-library-publish] # wire a Figma LIBRARY_PUBLISH webhook to this
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions: { contents: write, pull-requests: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run figma:pull
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ vars.FIGMA_FILE_KEY }}
+      - run: npm run tokens
+      - id: audit
+        run: npm run check:ownership
+        continue-on-error: true # the PR still opens, marked as needing a decision
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: figma-sync
+          title: 'tokens: sync from Figma'
+          body-path: reports/figma-diff.md
+          labels: tokens, figma${{ steps.audit.outcome == 'failure' && ', needs-decision' || '' }}
+          commit-message: 'tokens: sync from Figma'
+          add-paths: |
+            packages/tokens/figma/export.json
+            packages/theme/src/*.css

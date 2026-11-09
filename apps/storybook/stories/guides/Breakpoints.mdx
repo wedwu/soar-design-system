@@ -1,0 +1,81 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import '../../src/breakpoint-meter';
+
+<Meta title="Guides/Breakpoints" />
+
+# Breakpoints
+
+Breakpoints are the screen widths where a layout changes, for example where a sidebar collapses into a menu. Like every other visual value, they come from **Figma variables** (`breakpoint/*` in the Dimension collection).
+
+## The breakpoints
+
+<ax-docs-breakpoint-meter></ax-docs-breakpoint-meter>
+
+Each breakpoint is a **minimum width** (mobile-first). Styles for `md` apply at 48rem and wider. Your base styles, with no breakpoint, are for the smallest screens.
+
+They're in `rem`, so they move with the user's font size. Someone who sets a larger default text size gets the narrower layout sooner, which is what keeps text from cramping.
+
+## Using them
+
+CSS custom properties can't be used inside `@media` (`@media (width >= var(--x))` doesn't work), so the token build generates breakpoints in the forms that can:
+
+**SCSS.** Use the `ax-up` mixin:
+
+```scss
+@use '@soar-awesome/tokens/scss/breakpoints' as *;
+
+.layout {
+  display: grid;
+  @include ax-up(md) {
+    grid-template-columns: 16rem 1fr;
+  }
+}
+```
+
+**PostCSS or Lightning CSS.** Use custom media queries from `@soar-awesome/tokens/css/breakpoints.css`:
+
+```css
+@import '@soar-awesome/tokens/css/breakpoints.css';
+
+@media (--ax-bp-md) {
+  .layout { grid-template-columns: 16rem 1fr; }
+}
+```
+
+`@custom-media` isn't supported natively by browsers yet, so this needs the `postcss-custom-media` plugin or Lightning CSS's `customMedia` option.
+
+**JavaScript.** Use the ready-made queries:
+
+```js
+import { media, breakpoints } from '@soar-awesome/tokens';
+
+const wide = matchMedia(media.md);  // '(width >= 48rem)'
+wide.addEventListener('change', (e) => setSidebar(e.matches));
+```
+
+**Plain CSS without a build step.** Copy the value, and leave a comment naming the token, so a Figma change is easy to find:
+
+```css
+@media (width >= 48rem) { /* --ax-breakpoint-md */ }
+```
+
+The values also exist as custom properties (`--ax-breakpoint-md`) for use in calculations, but not in media queries.
+
+## Components use container queries, not breakpoints
+
+A component can't know where it will be placed. A data table in a narrow sidebar on a wide screen still needs its narrow layout. So:
+
+- **Pages and layouts** use the breakpoints above.
+- **Components** respond to the space they're given, using [container queries](https://developer.mozilla.org/docs/Web/CSS/CSS_container_queries) (`@container (width >= 40rem)`). Soar components follow this rule.
+
+## Web Awesome
+
+Web Awesome has **no breakpoint tokens**. Its only breakpoint is `<wa-page>`'s `mobile-breakpoint`, where the page navigation collapses into a menu. It defaults to `768px`, which matches Soar's `md` (48rem). To keep them tied together if `md` changes in Figma:
+
+```js
+document.querySelector('wa-page').mobileBreakpoint = breakpoints.md;
+```
+
+## Previewing in Storybook
+
+The **Viewport** button in the toolbar includes Soar's breakpoints, so any story can be previewed at each one.

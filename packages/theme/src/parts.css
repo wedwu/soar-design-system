@@ -1,0 +1,90 @@
+/*
+ * HAND-AUTHORED. The only stylesheet in this package a person edits.
+ *
+ * Rules for this file (enforced by `npm run check:ownership`):
+ *   1. Only for corrections WA's tokens can't express. If a --wa-* token
+ *      exists for it, map the token in alias-map.mjs instead.
+ *   2. No literal visual values. Reference var(--ax-*) or var(--wa-*) only.
+ *      Escape hatch: register an exception in tools/audit/exceptions.json
+ *      (reason, owner, review date) and mark the line /* audit-allow <id> *\/.
+ *   3. Never declare --wa-* or --ax-* properties here. Token values have one
+ *      writer, the generator.
+ *   4. Every ::part() must exist in upstream/webawesome.parts.json, so an
+ *      upstream rename fails the build instead of silently un-styling.
+ *   5. Everything lives in @layer ax-parts so consumers' unlayered CSS wins.
+ */
+
+@layer ax-parts {
+  /* Figma "Card": header sits on the lowered surface with a hairline divider.
+     WA cards have no header-background token. Accent cards are excluded:
+     their text is on-loud (white), which fails contrast on a light header. */
+  wa-card:not([appearance~='accent'])::part(header) {
+    background: var(--wa-color-surface-lowered);
+    border-block-end: var(--wa-panel-border-width) var(--wa-panel-border-style) var(--wa-color-surface-border);
+  }
+
+  /* Figma "Field/Label": labels are one step smaller than the value text.
+     WA has label color/weight/line-height tokens, but not label size. */
+  wa-input::part(form-control-label),
+  wa-select::part(form-control-label),
+  wa-textarea::part(form-control-label) {
+    font-size: var(--wa-font-size-s);
+  }
+
+  /* Figma "Dialog": titles use the heading family. */
+  wa-dialog::part(title) {
+    font-family: var(--wa-font-family-heading);
+    font-weight: var(--wa-font-weight-heading);
+  }
+
+  /* Figma "Drawer" (1 of 2): wider panel, roomier padding. Both are the
+     drawer's own CSS properties, so no part selector is needed. */
+  wa-drawer {
+    --size: 30rem; /* audit-allow drawer-width-no-token (see tools/audit/exceptions.json) */
+    --spacing: var(--wa-space-xl);
+  }
+
+  /* Figma "Drawer" (2 of 2): header separated from the body by a hairline.
+     WA has no token for a drawer header divider. */
+  wa-drawer::part(header) {
+    border-block-end: var(--wa-border-width-s) var(--wa-border-style) var(--wa-color-surface-border);
+  }
+
+  /* ax-control-info shows its own label and info text, and passes the same
+     text to Web Awesome controls through their label/hint API. That is the only
+     way it reaches the input inside WA's shadow DOM. These rules visually hide
+     WA's copy while keeping it for screen readers. The data-ax-proxy-*
+     markers are only set when ax-control-info filled the label or hint itself.
+     The tag list mirrors WA_LABEL_PROPERTY / WA_LABEL_SLOT in ax-control-info.ts. */
+  ax-control-info > wa-checkbox-group[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-color-picker[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-input[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-number-input[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-radio-group[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-select[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-tag-input[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-textarea[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-time-input[data-ax-proxy-label]::part(form-control-label),
+  ax-control-info > wa-checkbox[data-ax-proxy-label]::part(label),
+  ax-control-info > wa-switch[data-ax-proxy-label]::part(label),
+  ax-control-info > wa-checkbox-group[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-color-picker[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-input[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-number-input[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-radio-group[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-select[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-tag-input[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-textarea[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-time-input[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-checkbox[data-ax-proxy-hint]::part(hint),
+  ax-control-info > wa-switch[data-ax-proxy-hint]::part(hint) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}

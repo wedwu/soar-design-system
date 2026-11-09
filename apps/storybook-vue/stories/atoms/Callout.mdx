@@ -1,0 +1,123 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CalloutStories from './Callout.stories';
+
+<Meta of={CalloutStories} />
+
+# Callout
+
+Shows an important message inline with the surrounding content, such as a tip, warning or error. This is Web Awesome's `wa-callout`, loaded from the CDN and used directly in Vue templates as `<wa-callout>`, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+Put an icon in the `icon` slot. In these examples the icon follows the variant: information for brand, a check for success, a triangle for warning.
+
+<Canvas of={CalloutStories.Playground} />
+
+<Controls />
+
+## Variants
+
+`variant` sets the color and should match the message: `success` for something that worked, `warning` for something to check, `danger` for an error.
+
+<Canvas of={CalloutStories.Variants} />
+
+## Appearances
+
+`appearance` sets how strongly the color is applied.
+
+<Canvas of={CalloutStories.Appearances} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-callout>` has no on/off attributes or events, so it works in Vue templates as written. The icon is a `<wa-icon>` in the `icon` slot, and the rest of the content is the message.
+
+```vue
+<script setup>
+defineProps({ daysLeft: { type: Number, default: 3 }, variant: { type: String, default: 'warning' } });
+</script>
+
+<template>
+  <wa-callout :variant="variant">
+    <wa-icon slot="icon" name="triangle-exclamation"></wa-icon>
+    Your trial ends in {{ daysLeft }} days. Add a payment method to keep your projects.
+  </wa-callout>
+</template>
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. The callout has no events. Put the icon in the `icon` slot; the rest is the message.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, input } from '@angular/core';
+
+@Component({
+  selector: 'app-trial-callout',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-callout [attr.variant]="variant()">
+      <wa-icon slot="icon" name="triangle-exclamation"></wa-icon>
+      Your trial ends in {{ daysLeft() }} days. Add a payment method to keep your projects.
+    </wa-callout>
+  `,
+})
+export class TrialCalloutComponent {
+  readonly daysLeft = input(3);
+  readonly variant = input('warning');
+}
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. The callout has no events. Put the icon in the `icon` slot; the rest is the message.
+
+```jsx
+export function TrialCallout({ daysLeft = 3, variant = 'warning' }) {
+  return (
+    <wa-callout variant={variant}>
+      <wa-icon slot="icon" name="triangle-exclamation"></wa-icon>
+      Your trial ends in {daysLeft} days. Add a payment method to keep your projects.
+    </wa-callout>
+  );
+}
+```
+
+In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. No script is needed; change `variant` with `setAttribute` if the message changes.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-callout id="trial" variant="warning">
+  <wa-icon slot="icon" name="triangle-exclamation"></wa-icon>
+  Your trial ends in 3 days. Add a payment method to keep your projects.
+</wa-callout>
+
+<script type="module">
+  document.querySelector('#trial').setAttribute('variant', 'danger');
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

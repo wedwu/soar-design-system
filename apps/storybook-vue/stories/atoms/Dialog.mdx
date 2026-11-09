@@ -1,0 +1,161 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DialogStories from './Dialog.stories';
+
+<Meta of={DialogStories} />
+
+# Dialog
+
+Appears above the page and needs the user's attention, for example to confirm a destructive action. This is Web Awesome's `wa-dialog`, loaded from the CDN and used directly in Vue templates as `<wa-dialog>`, exactly as on a CDN page.
+
+Soar makes one adjustment in `parts.css`: the title uses the heading font family and weight, through `wa-dialog::part(title)`. The component itself is untouched.
+
+Each example starts closed. Use its **Delete project** button to see it. The controls below change the first example; the dialog then opens over this page, as it would in an app.
+
+<Canvas of={DialogStories.Playground} />
+
+<Controls />
+
+## Light dismiss
+
+`light-dismiss` also closes the dialog when the backdrop is clicked. Leave it off for dialogs where an accidental click would lose work.
+
+<Canvas of={DialogStories.LightDismiss} />
+
+## Without header
+
+`without-header` removes the title and the close button, so give the dialog its own way to close, such as a footer button.
+
+<Canvas of={DialogStories.WithoutHeader} />
+
+## Closing
+
+The dialog closes on Escape, on its close button, or on any element inside it with `data-dialog="close"`.
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-dialog>` is a custom element, not a Vue component, so `v-model` doesn't work on it. Two things to handle yourself:
+
+- **Keep `open` in sync.** The dialog can close itself, so listen for `wa-after-hide` and set your own `open` back to `false`. Use `.self` so the same event bubbling up from a tooltip or dropdown inside the dialog is ignored.
+- **Bind booleans as `x || undefined`.** If Vue renders the dialog before the CDN script has loaded, it writes attributes, and `false` becomes `open="false"`, which still counts as open.
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const open = ref(false);
+</script>
+
+<template>
+  <wa-button variant="danger" @click="open = true">Delete project</wa-button>
+  <wa-dialog :open="open || undefined" label="Delete project?" @wa-after-hide.self="open = false">
+    This permanently deletes <strong>Apollo</strong>.
+    <wa-button slot="footer" appearance="plain" data-dialog="close">Cancel</wa-button>
+    <wa-button slot="footer" variant="danger" data-dialog="close" @click="deleteProject">Delete project</wa-button>
+  </wa-dialog>
+</template>
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Keep `open` in sync: the dialog can close itself, so set it back to `false` on `(wa-after-hide)`.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-delete-dialog',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-button variant="danger" (click)="open.set(true)">Delete project</wa-button>
+    <wa-dialog label="Delete project?" [attr.open]="open() ? '' : null" (wa-after-hide)="onHide($event)">
+      This permanently deletes <strong>Apollo</strong>.
+      <wa-button slot="footer" appearance="plain" data-dialog="close">Cancel</wa-button>
+      <wa-button slot="footer" variant="danger" data-dialog="close" (click)="deleteProject()">Delete project</wa-button>
+    </wa-dialog>
+  `,
+})
+export class DeleteDialogComponent {
+  readonly open = signal(false);
+
+  onHide(event: Event) {
+    if (event.target === event.currentTarget) this.open.set(false);
+  }
+
+  deleteProject() {
+    console.log('deleted');
+  }
+}
+```
+
+Bind on/off attributes with `[attr.open]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `open="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Keep `open` in sync: the dialog can close itself, so set it back to `false` on `onwa-after-hide`.
+
+```jsx
+import { useState } from 'react';
+
+export function DeleteDialog({ onDelete }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <wa-button variant="danger" onClick={() => setOpen(true)}>Delete project</wa-button>
+      <wa-dialog
+        label="Delete project?"
+        open={open}
+        onwa-after-hide={(event) => event.target === event.currentTarget && setOpen(false)}
+      >
+        This permanently deletes <strong>Apollo</strong>.
+        <wa-button slot="footer" appearance="plain" data-dialog="close">Cancel</wa-button>
+        <wa-button slot="footer" variant="danger" data-dialog="close" onClick={onDelete}>Delete project</wa-button>
+      </wa-dialog>
+    </>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `open={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Open it by setting `open`; buttons with `data-dialog="close"` close it with no script.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-button id="delete" variant="danger">Delete project</wa-button>
+<wa-dialog id="confirm" label="Delete project?">
+  This permanently deletes <strong>Apollo</strong>.
+  <wa-button slot="footer" appearance="plain" data-dialog="close">Cancel</wa-button>
+  <wa-button slot="footer" variant="danger" data-dialog="close">Delete project</wa-button>
+</wa-dialog>
+
+<script type="module">
+  const dialog = document.querySelector('#confirm');
+  document.querySelector('#delete').addEventListener('click', () => {
+    dialog.open = true;
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

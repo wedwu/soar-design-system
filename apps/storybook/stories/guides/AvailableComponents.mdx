@@ -1,0 +1,70 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { WA_VERSION, atoms, soarComponents, undocumented } from '../../src/catalog';
+
+<Meta title="Guides/Available Components" />
+
+{/* Links don't wrap <code>: Storybook's link color on its code background fails contrast (found by the component audit). */}
+
+# Available components
+
+Everything on this page is generated: from the story files, from Web Awesome {WA_VERSION}'s own component metadata, and from Soar's component manifest. It updates itself when a component is added or Web Awesome is upgraded.
+
+## Atoms ({atoms.length})
+
+Web Awesome components, restyled by Soar. Import them from Web Awesome:
+`import '@awesome.me/webawesome/dist/components/<name>/<name>.js'`.
+
+<table>
+  <thead>
+    <tr><th>Component</th><th>Elements</th><th>What it's for</th></tr>
+  </thead>
+  <tbody>
+    {atoms.map((a) => (
+      <tr key={a.tag}>
+        <td><a href={a.href} target="_top"><strong>{a.name}</strong></a></td>
+        <td>{a.tags.map((t) => <code key={t} style={{ display: 'block' }}>{`<${t}>`}</code>)}</td>
+        <td>{a.description}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Molecules and organisms ({soarComponents.length})
+
+Built by Soar from atoms. Import them from `@soar-awesome/components/<tag>.js`.
+
+<table>
+  <thead>
+    <tr><th>Component</th><th>Layer</th><th>What it's for</th></tr>
+  </thead>
+  <tbody>
+    {soarComponents.map((c) => (
+      <tr key={c.tag}>
+        <td>{c.href ? <a href={c.href} target="_top">{`<${c.tag}>`}</a> : <code>{`<${c.tag}>`}</code>}</td>
+        <td>{c.layer}</td>
+        <td>{c.description}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## In Web Awesome, not yet documented here ({undocumented.length})
+
+These ship in the Web Awesome package Soar already depends on, so they **work today** and pick up Soar's colors, spacing and type automatically. They haven't been reviewed or documented as Soar atoms yet.
+
+- **Use with care.** Check the [Web Awesome docs](https://webawesome.com/docs/components) for usage, and check accessibility yourself.
+- **To promote one,** add a story under `stories/atoms/` (see the README, §9.1). It then moves to the Atoms table above automatically.
+
+<table>
+  <thead>
+    <tr><th>Element</th><th>What it's for</th></tr>
+  </thead>
+  <tbody>
+    {undocumented.map((u) => (
+      <tr key={u.tag}>
+        <td><a href={`https://webawesome.com/docs/components/${u.tag.replace(/^wa-/, '')}`} target="_blank" rel="noreferrer">{`<${u.tag}>`}</a></td>
+        <td>{u.description}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>

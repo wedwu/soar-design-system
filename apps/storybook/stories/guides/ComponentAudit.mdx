@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import '../../src/audit-scorecard';
+
+<Meta title="Guides/Component Audit" />
+
+# Component audit
+
+Every component is checked against the design system's rules on every pull request. This page shows the latest results. Select a component to see its findings.
+
+<ax-docs-audit-scorecard></ax-docs-audit-scorecard>
+
+## How it works
+
+`npm run audit:components` runs `tools/audit/manager.mjs`. The manager:
+
+1. **Finds every component.** Atoms come from the atom stories, molecules and organisms from `packages/components/src`. Nobody keeps a list by hand, so a new component is audited automatically.
+2. **Runs each check that applies.** Checks are small modules in `tools/audit/checks/` with a shared interface, so adding one is a single file.
+3. **Writes `reports/audit.json`** for this page, and **`reports/audit.md`** for the CI job summary.
+4. **Exits with an error if any check fails.** Docs and test gaps are warnings and never block. Token, dependency, upstream, accessibility and exception problems do block.
+
+| Command | Runs |
+|---|---|
+| `npm run audit:full` | Builds everything, then runs every check. One command, so it works in any shell, including Windows PowerShell. |
+| `npm run audit:components` | Every check, without building first. Accessibility needs a built Storybook (`npm run build:all`) and an installed browser. |
+| `npm run check:ownership` | Everything except accessibility. Fast, with no browser. |
+| `node tools/audit/manager.mjs --only a11y` | Selected checks only. |
+| `node tools/audit/manager.mjs --require a11y` | Fails instead of skipping when accessibility can't run (CI uses this). |
+
+## The accessibility check
+
+It opens every story and the Guides pages in a real browser and runs [axe](https://github.com/dequelabs/axe-core) on each. It also catches stories that throw, and elements that never registered (a missing import).
+
+**It uses the browser that's already installed** (Chrome, Edge, Chromium or Brave), driven by `playwright-core`. It never downloads one. To use a specific browser, set `AUDIT_BROWSER=/path/to/browser`. If none is found, the check reports *Not run* with instructions. GitHub's Ubuntu runners have Chrome preinstalled.
+
+## Exceptions
+
+Sometimes a finding is correct to allow, for example an upstream Web Awesome issue we can't patch. Each one must be **registered** in `tools/audit/exceptions.json`:
+
+```json
+{
+  "id": "drawer-width-no-token",
+  "check": "tokens",
+  "component": "wa-drawer",
+  "reason": "Figma has no drawer-width variable yet.",
+  "owner": "@soar/design-system",
+  "review": "2027-01-15"
+}
+```
+
+The source then points at the entry:
+
+- **CSS:** `/* audit-allow drawer-width-no-token */` on the line.
+- **A story that turns off an axe rule:** `// audit-exception: <id>` above it. Accessibility exceptions also name the `story` and `rules` they cover.
+
+The audit fails on markers with no registry entry, and on entries missing a reason, owner or review date. It warns about entries past their review date and entries nothing uses any more. So suppressions can't quietly pile up.

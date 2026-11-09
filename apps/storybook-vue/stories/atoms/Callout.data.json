@@ -1,0 +1,12 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "callout" },
+  "text": "Your trial ends in 3 days. Add a payment method to keep your projects.",
+  "icons": {
+    "brand": "circle-info",
+    "neutral": "gear",
+    "success": "circle-check",
+    "warning": "triangle-exclamation",
+    "danger": "circle-exclamation"
+  },
+  "appearances": ["accent", "filled", "outlined", "filled-outlined", "plain"]
+}

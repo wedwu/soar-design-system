@@ -1,0 +1,152 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DetailsStories from './Details.stories';
+
+<Meta of={DetailsStories} />
+
+# Details
+
+Shows a short summary that expands to reveal more, such as an FAQ answer. This is Web Awesome's `wa-details`, loaded from the CDN and used directly in Vue templates as `<wa-details>`, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+<Canvas of={DetailsStories.Playground} />
+
+<Controls />
+
+## Open
+
+`open` starts the section expanded. Users can still collapse it.
+
+<Canvas of={DetailsStories.Open} />
+
+## Grouped
+
+Give several sections the same `name` to make them an accordion: opening one closes the others.
+
+<Canvas of={DetailsStories.Grouped} />
+
+## Appearances
+
+<Canvas of={DetailsStories.Appearances} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-details>` is a custom element, not a Vue component, so `v-model` doesn't work on it. To track whether it's open, listen for `wa-show` and `wa-after-hide`, using `.self` so the same events bubbling up from elements inside it are ignored:
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const open = ref(false);
+</script>
+
+<template>
+  <wa-details
+    summary="What happens when my trial ends?"
+    :open="open || undefined"
+    @wa-show.self="open = true"
+    @wa-after-hide.self="open = false"
+  >
+    Your projects stay read-only for 30 days.
+  </wa-details>
+</template>
+```
+
+Bind `open` and `disabled` as `x || undefined`. If Vue renders the section before the CDN script has loaded, it writes attributes, and `open="false"` would still count as open.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Track whether it's open with `(wa-show)` and `(wa-after-hide)`, ignoring the same events from elements inside it.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-trial-details',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-details
+      summary="What happens when my trial ends?"
+      [attr.open]="open() ? '' : null"
+      (wa-show)="setOpen($event, true)"
+      (wa-after-hide)="setOpen($event, false)"
+    >
+      Your projects stay read-only for 30 days.
+    </wa-details>
+  `,
+})
+export class TrialDetailsComponent {
+  readonly open = signal(false);
+
+  setOpen(event: Event, open: boolean) {
+    if (event.target === event.currentTarget) this.open.set(open);
+  }
+}
+```
+
+Bind on/off attributes with `[attr.open]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `open="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Track whether it's open with `onwa-show` and `onwa-after-hide`, ignoring the same events from elements inside it.
+
+```jsx
+import { useState } from 'react';
+
+export function TrialDetails() {
+  const [open, setOpen] = useState(false);
+  const own = (handler) => (event) => event.target === event.currentTarget && handler();
+
+  return (
+    <wa-details
+      summary="What happens when my trial ends?"
+      open={open}
+      onwa-show={own(() => setOpen(true))}
+      onwa-after-hide={own(() => setOpen(false))}
+    >
+      Your projects stay read-only for 30 days.
+    </wa-details>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `open={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Read `open`, or listen for `wa-show` and `wa-after-hide`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-details id="trial" summary="What happens when my trial ends?">
+  Your projects stay read-only for 30 days.
+</wa-details>
+
+<script type="module">
+  const details = document.querySelector('#trial');
+  details.addEventListener('wa-show', (event) => {
+    if (event.target === details) console.log('opened');
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

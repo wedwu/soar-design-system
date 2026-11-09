@@ -1,0 +1,11 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "card" },
+  "header": { "title": "Usage this month", "badge": "Healthy", "badgeVariant": "success" },
+  "body": "You've used 62% of your plan's API quota.",
+  "actions": [
+    { "text": "Upgrade", "appearance": "filled", "variant": "brand" },
+    { "text": "Details", "appearance": "plain" }
+  ],
+  "bodyOnly": "A card with no header or footer.",
+  "appearances": ["outlined", "filled", "filled-outlined", "plain", "accent"]
+}

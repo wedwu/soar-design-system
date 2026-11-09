@@ -1,0 +1,10 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "divider" },
+  "playground": { "before": "Above", "after": "Below" },
+  "vertical": ["Edit", "Share", "Delete"],
+  "labels": [
+    { "label": "or" },
+    { "label": "Billing", "labelPlacement": "start" },
+    { "label": "Archived", "labelPlacement": "end" }
+  ]
+}

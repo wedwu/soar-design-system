@@ -1,0 +1,142 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TooltipStories from './Tooltip.stories';
+
+<Meta of={TooltipStories} />
+
+# Tooltip
+
+Shows a short description when users hover over or focus an element, such as an icon-only button. This is Web Awesome's `wa-tooltip`, loaded from the CDN and used directly in Vue templates as `<wa-tooltip>`, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+A tooltip attaches to its target with `for="<target id>"`. Keep the content short and non-interactive. For anything clickable, use a dropdown or a popover.
+
+<Canvas of={TooltipStories.Playground} />
+
+<Controls />
+
+## Open
+
+`open` shows the tooltip without hovering. Clicking anywhere else on the page closes it, as moving the pointer away would.
+
+<Canvas of={TooltipStories.Open} />
+
+## Click trigger
+
+`trigger="click"` shows it on click instead of hover and focus.
+
+<Canvas of={TooltipStories.ClickTrigger} />
+
+## Placements
+
+<Canvas of={TooltipStories.Placements} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Give the target an `id` and point the tooltip at it with `for`. If the component can appear more than once on a page, make the id unique per instance, for example with Vue's `useId()`:
+
+```vue
+<script setup>
+import { useId } from 'vue';
+const id = useId();
+</script>
+
+<template>
+  <wa-button :id="id" appearance="outlined">
+    <wa-icon name="link" label="Copy invoice link"></wa-icon>
+  </wa-button>
+  <wa-tooltip :for="id">Copy invoice link</wa-tooltip>
+</template>
+```
+
+Bind on/off attributes such as `open`, `disabled` and `without-arrow` as `x || undefined`. If Vue renders the tooltip before the CDN script has loaded, it writes attributes, and `open="false"` would still count as open.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Give the target an `id` and point the tooltip at it with `for`. Make the id unique per instance, here with a counter, in case the component appears more than once on a page.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+
+let nextId = 0;
+
+@Component({
+  selector: 'app-copy-link',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-button [id]="id" appearance="outlined">
+      <wa-icon name="link" label="Copy invoice link"></wa-icon>
+    </wa-button>
+    <wa-tooltip [attr.for]="id">Copy invoice link</wa-tooltip>
+  `,
+})
+export class CopyLinkComponent {
+  readonly id = `copy-link-${++nextId}`;
+}
+```
+
+Bind on/off attributes with `[attr.open]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `open="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Give the target an `id` and point the tooltip at it with `for`. `useId()` makes the id unique per instance.
+
+```jsx
+import { useId } from 'react';
+
+export function CopyLink() {
+  const id = useId();
+
+  return (
+    <>
+      <wa-button id={id} appearance="outlined">
+        <wa-icon name="link" label="Copy invoice link"></wa-icon>
+      </wa-button>
+      <wa-tooltip for={id}>Copy invoice link</wa-tooltip>
+    </>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `open={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Point the tooltip at its target's `id` with `for`. No script is needed; set `open` to show it from script.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-button id="copy-link" appearance="outlined">
+  <wa-icon name="link" label="Copy invoice link"></wa-icon>
+</wa-button>
+<wa-tooltip id="copy-link-tip" for="copy-link">Copy invoice link</wa-tooltip>
+
+<script type="module">
+  // Optional: show it from script, for example after the link is copied.
+  document.querySelector('#copy-link').addEventListener('click', () => {
+    document.querySelector('#copy-link-tip').open = true;
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

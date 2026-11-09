@@ -1,0 +1,15 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "dialog" },
+  "trigger": "Delete project",
+  "label": "Delete project?",
+  "body": {
+    "before": "This permanently deletes ",
+    "strong": "Apollo",
+    "after": " and its 14 invoices. You can't undo this."
+  },
+  "actions": [
+    { "text": "Cancel", "appearance": "plain" },
+    { "text": "Delete project", "variant": "danger" }
+  ],
+  "lightDismissLabel": "Click outside to close"
+}

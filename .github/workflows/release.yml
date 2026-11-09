@@ -1,0 +1,79 @@
+name: Release
+
+# Nothing is published to npmjs or any other registry. On main:
+#   1. Changesets opens (or updates) a "Version packages" PR.
+#   2. Merging it bumps the version. This workflow then builds, stages
+#      cdn-release/ (CDN bundle + Web Awesome + the npm tarball apps install),
+#      deploys it to our static host and tags the commit v<version>.
+# A version is released once: if its tag already exists, steps 2+ are skipped.
+# In this public showcase there is no static host to deploy to, so the
+# workflow only runs by hand. A real setup triggers it on push to main.
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+concurrency: release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions: { contents: write, pull-requests: write }
+    env:
+      CDN_BASE_URL: ${{ vars.CDN_BASE_URL }} # e.g. https://cdn.example.com
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+
+      - id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npx changeset version
+          title: 'Version packages'
+          commit: 'Version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # No pending changesets means the version PR was merged (or there was
+      # nothing to release). Release only if this version has no tag yet.
+      - id: version
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          v=$(node -p "require('./packages/soar/package.json').version")
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$v" > /dev/null; then
+            echo "new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.version.outputs.new == 'true'
+        run: npm run release
+
+      - if: steps.version.outputs.new == 'true'
+        uses: actions/upload-artifact@v4
+        with: { name: cdn-release, path: cdn-release }
+
+      # Deploy to your static host. Pick one and delete the rest. Never
+      # overwrite an existing version: versioned paths (and tarballs, whose
+      # hashes apps' lockfiles record) are immutable.
+      #
+      # rsync / internal file server:
+      #   - if: steps.version.outputs.new == 'true'
+      #     run: rsync -av --ignore-existing cdn-release/ deploy@static.example.com:/srv/cdn/
+      #
+      # Any S3-compatible bucket:
+      #   - if: steps.version.outputs.new == 'true'
+      #     run: aws s3 sync cdn-release/ s3://soar-cdn/ --cache-control "public,max-age=31536000,immutable"
+      #
+      # Azure Blob:
+      #   - if: steps.version.outputs.new == 'true'
+      #     run: az storage blob upload-batch -s cdn-release -d '$web' --overwrite false
+
+      # Tag last, so a failed build or deploy is retried on the next push.
+      - if: steps.version.outputs.new == 'true'
+        run: |
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin "v${{ steps.version.outputs.version }}"

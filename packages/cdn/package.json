@@ -1,0 +1,27 @@
+{
+  "name": "@soar-awesome/cdn",
+  "version": "0.1.0",
+  "description": "Single-file CDN build of Soar Awesome. Load Web Awesome first; it is not inlined.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/soar-awesome.min.js",
+    "./soar-awesome.css": "./dist/soar-awesome.css"
+  },
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "peerDependencies": {
+    "@awesome.me/webawesome": "~3.14.0"
+  },
+  "devDependencies": {
+    "@soar-awesome/components": "*",
+    "@soar-awesome/theme": "*",
+    "@awesome.me/webawesome": "3.14.0",
+    "esbuild": "^0.28.2"
+  }
+}

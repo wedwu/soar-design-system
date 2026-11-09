@@ -1,0 +1,16 @@
+/*
+ * @soar-awesome/theme
+ *
+ * Load AFTER Web Awesome's own stylesheet:
+ *   @import '@awesome.me/webawesome/dist/styles/webawesome.css';
+ *   @import '@soar-awesome/soar/theme/soar.css';
+ *
+ * Load order doesn't actually matter for correctness: tokens.css declares
+ * the full layer order (WA's layers, then ax-tokens, ax-theme, ax-parts), so
+ * our layers outrank WA's whichever file the browser sees first.
+ */
+@import url('./tokens.css');     /* generated: --ax-* primitives + dimensions */
+@import url('./light.css');      /* generated: --ax-* semantic, light        */
+@import url('./dark.css');       /* generated: --ax-* semantic, dark         */
+@import url('./webawesome.css'); /* generated: --wa-* -> var(--ax-*)          */
+@import url('./parts.css');      /* hand-authored ::part() corrections       */

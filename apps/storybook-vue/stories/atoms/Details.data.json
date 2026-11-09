@@ -1,0 +1,14 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "details" },
+  "summary": "What happens when my trial ends?",
+  "content": "Your projects stay read-only for 30 days. Add a payment method any time to pick up where you left off.",
+  "group": {
+    "name": "faq",
+    "items": [
+      { "summary": "Can I change plans later?", "content": "Yes. Upgrades apply immediately; downgrades apply at the next billing date.", "open": true },
+      { "summary": "Do you offer refunds?", "content": "Annual plans can be refunded within 30 days." },
+      { "summary": "Where is my data stored?", "content": "In the region you chose when creating the workspace." }
+    ]
+  },
+  "appearances": ["outlined", "filled", "filled-outlined", "plain"]
+}

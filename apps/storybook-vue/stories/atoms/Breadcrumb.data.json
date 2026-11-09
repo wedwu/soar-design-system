@@ -1,0 +1,16 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "breadcrumb" },
+  "label": "Breadcrumb",
+  "items": [
+    { "text": "Home", "href": "#" },
+    { "text": "Projects", "href": "#" },
+    { "text": "Apollo", "href": "#" },
+    { "text": "Settings" }
+  ],
+  "separatorIcon": "angle-right",
+  "withIcons": [
+    { "icon": "house", "iconLabel": "Home", "href": "#" },
+    { "startIcon": "folder", "text": "Projects", "href": "#" },
+    { "text": "Apollo" }
+  ]
+}

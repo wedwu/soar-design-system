@@ -1,0 +1,19 @@
+{
+  "name": "@soar-awesome/storybook-vue",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../storybook/scripts/wa-api.mjs && storybook dev -p 6007",
+    "build": "node ../storybook/scripts/wa-api.mjs && storybook build -o storybook-static"
+  },
+  "devDependencies": {
+    "@storybook/addon-designs": "^11.1.4",
+    "@storybook/addon-docs": "^10.6.3",
+    "@storybook/vue3-vite": "^10.6.3",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "storybook": "^10.6.3",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.4",
+    "vue": "^3.5.43"
+  }
+}

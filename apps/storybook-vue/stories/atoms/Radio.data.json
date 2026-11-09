@@ -1,0 +1,24 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "radio-group" },
+  "group": {
+    "label": "Billing cycle",
+    "hint": "You can change this at any time.",
+    "name": "billing",
+    "value": "monthly"
+  },
+  "options": [
+    { "value": "monthly", "text": "Monthly" },
+    { "value": "annual", "text": "Annual (2 months free)" },
+    { "value": "custom", "text": "Custom (contact sales)", "disabled": true }
+  ],
+  "buttons": {
+    "label": "View",
+    "name": "view",
+    "value": "list",
+    "options": [
+      { "value": "list", "text": "List" },
+      { "value": "board", "text": "Board" },
+      { "value": "calendar", "text": "Calendar" }
+    ]
+  }
+}

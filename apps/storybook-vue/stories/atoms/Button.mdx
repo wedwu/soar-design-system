@@ -1,0 +1,138 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonStories from './Button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+Starts an action, such as saving or submitting a form. This is Web Awesome's `wa-button`, loaded from the CDN and used directly in Vue templates as `<wa-button>`, exactly as on a CDN page.
+
+There are no component-specific changes. Every color, radius, font weight and transition comes from Soar tokens.
+
+Clicks appear in the **Actions** panel.
+
+<Canvas of={ButtonStories.Playground} />
+
+<Controls />
+
+## Variants and appearances
+
+`variant` sets the color and meaning: `brand` for the main action, `danger` for destructive ones. `appearance` sets how strongly it's applied, from `accent` (solid) to `plain` (text only).
+
+<Canvas of={ButtonStories.Variants} />
+
+## Sizes
+
+<Canvas of={ButtonStories.Sizes} />
+
+## States
+
+`disabled` blocks the button, `loading` shows a spinner while an action runs, `with-caret` adds a down arrow (for buttons that open a menu), and `pill` rounds the ends.
+
+<Canvas of={ButtonStories.States} />
+
+## With icons
+
+Put icons in the `start` or `end` slot next to the label. An icon-only button puts the icon in the **default** slot with a `label`, which becomes the button's accessible name.
+
+<Canvas of={ButtonStories.WithIcons} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`@click` works on `<wa-button>` as on any element:
+
+```vue
+<wa-button variant="brand" :loading="saving || undefined" @click="save">Save changes</wa-button>
+```
+
+Bind on/off attributes such as `disabled`, `loading` and `pill` as `x || undefined`. If Vue renders the button before the CDN script has loaded, it writes attributes, and `disabled="false"` would still count as disabled.
+
+To make it a link, set `href`; it then renders an `<a>`. Use `type="submit"` for a button that submits its form.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. `(click)` works as on any element.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-save-button',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-button variant="brand" [attr.loading]="saving() ? '' : null" (click)="save()">Save changes</wa-button>
+  `,
+})
+export class SaveButtonComponent {
+  readonly saving = signal(false);
+
+  save() {
+    this.saving.set(true);
+    setTimeout(() => this.saving.set(false), 1000);
+  }
+}
+```
+
+Bind on/off attributes with `[attr.loading]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `loading="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. `onClick` works as on any element.
+
+```jsx
+import { useState } from 'react';
+
+export function SaveButton() {
+  const [saving, setSaving] = useState(false);
+
+  const save = () => {
+    setSaving(true);
+    setTimeout(() => setSaving(false), 1000);
+  };
+
+  return (
+    <wa-button variant="brand" loading={saving} onClick={save}>Save changes</wa-button>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `loading={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Listen for `click`, and turn `loading` on and off with `toggleAttribute`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-button id="save" variant="brand">Save changes</wa-button>
+
+<script type="module">
+  const button = document.querySelector('#save');
+  button.addEventListener('click', () => {
+    button.toggleAttribute('loading', true);
+    setTimeout(() => button.toggleAttribute('loading', false), 1000);
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

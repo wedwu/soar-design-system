@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { WA_VERSION, atoms, waElements } from '../../src/catalog';
+
+<Meta title="Guides/Slots" />
+
+# Slots
+
+A **slot** is a named place inside a component where you put your own content. It's how you give a button an icon, a card a header, or a dialog its footer buttons, without the component needing a property for every possibility.
+
+## How they work
+
+Every component has a **default slot**. Anything you put inside the tag without a `slot` attribute goes there:
+
+```html
+<wa-button>Save</wa-button>   <!-- "Save" goes into the default slot -->
+```
+
+**Named slots** take content marked with a matching `slot` attribute:
+
+```html
+<wa-button variant="brand">
+  <wa-icon slot="start" name="floppy-disk"></wa-icon>   <!-- before the label -->
+  Save
+  <wa-icon slot="end" name="arrow-right"></wa-icon>     <!-- after the label -->
+</wa-button>
+
+<wa-card>
+  <div slot="header">Usage this month</div>
+  You've used 62% of your quota.
+  <div slot="footer"><wa-button>Upgrade</wa-button></div>
+</wa-card>
+```
+
+## Rules of thumb
+
+- **`slot` goes on a direct child.** `<div><span slot="header">` does not fill the header. The `slot` attribute only counts on the component's own children.
+- **Many slots have an attribute shortcut.** For example, `label` on `<wa-input>` or `summary` on `<wa-details>`. Use the attribute for plain text, and the slot when you need markup such as a link or an icon.
+- **You style slotted content normally.** It stays in your page, not inside the component, so your app's CSS applies to it as usual.
+- **An empty slot takes no space.** Components hide a header, footer or icon area when nothing is slotted into it.
+- **Frameworks pass `slot` through as-is.** In React, Vue and Angular, write `slot="footer"` on the child element exactly as in HTML.
+
+## Slots by component
+
+Generated from Web Awesome {WA_VERSION}'s metadata for every atom documented here. "(default)" is the default slot.
+
+<table>
+  <thead>
+    <tr><th>Element</th><th>Slot</th><th>What goes there</th></tr>
+  </thead>
+  <tbody>
+    {atoms.flatMap((a) =>
+      a.tags.flatMap((tag) =>
+        (waElements[tag]?.slots ?? []).map((s, i) => (
+          <tr key={`${tag}-${s.name}`}>
+            <td>{i === 0 ? <code>{`<${tag}>`}</code> : null}</td>
+            <td><code>{s.name || '(default)'}</code></td>
+            <td>{s.description}</td>
+          </tr>
+        )),
+      ),
+    )}
+  </tbody>
+</table>

@@ -1,0 +1,138 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TagStories from './Tag.stories';
+
+<Meta of={TagStories} />
+
+# Tag
+
+Labels an item with a short keyword, such as a category or a filter. This is Web Awesome's `wa-tag`, loaded from the CDN and used directly in Vue templates as `<wa-tag>`, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+<Canvas of={TagStories.Playground} />
+
+<Controls />
+
+## Variants and appearances
+
+<Canvas of={TagStories.Variants} />
+
+## Sizes
+
+<Canvas of={TagStories.Sizes} />
+
+## Removable
+
+`with-remove` adds a remove button. It only shows the button and fires `wa-remove`; your code removes the tag. Try it here: each removal also appears in the **Actions** panel.
+
+<Canvas of={TagStories.Removable} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Keep the tags in a list, and drop one when it fires `wa-remove`:
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const filters = ref(['invoices', 'mentions', 'deploys']);
+</script>
+
+<template>
+  <wa-tag
+    v-for="filter in filters"
+    :key="filter"
+    with-remove
+    @wa-remove="filters = filters.filter((f) => f !== filter)"
+  >{{ filter }}</wa-tag>
+</template>
+```
+
+Bind `pill` and `with-remove` as `x || undefined`. If Vue renders the tag before the CDN script has loaded, it writes attributes, and `pill="false"` would still count as on.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Keep the tags in a list, and drop one on `(wa-remove)`.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-filter-tags',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    @for (filter of filters(); track filter) {
+      <wa-tag with-remove (wa-remove)="remove(filter)">{{ filter }}</wa-tag>
+    }
+  `,
+})
+export class FilterTagsComponent {
+  readonly filters = signal(['invoices', 'mentions', 'deploys']);
+
+  remove(filter: string) {
+    this.filters.update((all) => all.filter((f) => f !== filter));
+  }
+}
+```
+
+Bind on/off attributes with `[attr.pill]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `pill="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Keep the tags in a list, and drop one on `onwa-remove`.
+
+```jsx
+import { useState } from 'react';
+
+export function FilterTags() {
+  const [filters, setFilters] = useState(['invoices', 'mentions', 'deploys']);
+
+  return filters.map((filter) => (
+    <wa-tag key={filter} with-remove onwa-remove={() => setFilters((all) => all.filter((f) => f !== filter))}>
+      {filter}
+    </wa-tag>
+  ));
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `pill={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. `with-remove` only fires `wa-remove`; remove the tag yourself.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<div id="filters">
+  <wa-tag with-remove>invoices</wa-tag>
+  <wa-tag with-remove>mentions</wa-tag>
+  <wa-tag with-remove>deploys</wa-tag>
+</div>
+
+<script type="module">
+  document.querySelector('#filters').addEventListener('wa-remove', (event) => {
+    event.target.remove();
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

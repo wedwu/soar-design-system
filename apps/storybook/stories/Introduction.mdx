@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { WA_VERSION, atoms, soarComponents, docsHref } from '../src/catalog';
+
+<Meta title="Introduction" />
+
+# Soar Awesome
+
+Soar Awesome is Soar's design system. It gives every Soar product the same components, colors, spacing and type, so teams don't each rebuild them.
+
+It is built **on top of [Web Awesome](https://webawesome.com) {WA_VERSION}**, an open-source library of accessible web components, and is never a fork of it. Web Awesome supplies the building blocks. Soar supplies the look, from Figma, and the larger patterns its products share.
+
+## What's in it
+
+<table>
+  <thead>
+    <tr><th>Layer</th><th>What it is</th><th>Who owns it</th><th>Count</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Foundations</strong></td><td>Color, spacing, shape, type and motion values</td><td>Soar design, in <strong>Figma variables</strong></td><td>—</td></tr>
+    <tr><td><strong>Atoms</strong></td><td>Single controls: buttons, inputs, dialogs and more</td><td><strong>Web Awesome</strong>. Soar only restyles them</td><td>{atoms.length}</td></tr>
+    <tr><td><strong>Molecules</strong></td><td>Small combinations of atoms, such as a validated field</td><td>Soar</td><td>{soarComponents.filter((c) => c.layer === 'Molecule').length}</td></tr>
+    <tr><td><strong>Organisms</strong></td><td>Larger features, such as a data table</td><td>Soar</td><td>{soarComponents.filter((c) => c.layer === 'Organism').length}</td></tr>
+  </tbody>
+</table>
+
+## Start here
+
+<ul>
+  <li><a href={docsHref('Guides/Available Components')} target="_top"><strong>Available Components</strong></a>: everything you can use today, and what Web Awesome offers that isn't documented here yet.</li>
+  <li><a href={docsHref('Guides/Slots')} target="_top"><strong>Slots</strong></a>: how to put your own content inside a component.</li>
+  <li><a href={docsHref('Guides/CSS Shadow Parts')} target="_top"><strong>CSS Shadow Parts</strong></a>: how to restyle a component's insides, and when you shouldn't.</li>
+  <li><a href={docsHref('Guides/Font Licensing')} target="_top"><strong>Font Licensing</strong></a>: the fonts and icons the system uses, and what their licenses require.</li>
+  <li><a href={docsHref('Guides/Terms')} target="_top"><strong>Terms</strong></a>: a glossary of every term on these pages.</li>
+</ul>
+
+## Three rules
+
+1. **Figma is the only source of visual values.** Colors, spacing and type come from Figma variables. Nobody types a hex code or a pixel value into the code, and an automated check (`npm run check:ownership`) enforces it.
+2. **Web Awesome is used as-is.** We never change its code. We restyle it through the settings it exposes: its CSS custom properties and, where those aren't enough, its CSS shadow parts.
+3. **Each value has exactly one place it's set.** That's why a Figma update or a Web Awesome upgrade can't quietly undo someone else's change.
+
+## Using it in an app
+
+The components are standard **custom elements**. They work in plain HTML and in any framework: React, Vue, Angular, or none.
+
+**npm.** Apps add one dependency, `@soar-awesome/soar`, pointing at the release's tarball URL on Soar's own server. It isn't on npmjs or any other registry. The repo README has the exact `package.json` line.
+
+```js
+import '@awesome.me/webawesome/dist/styles/webawesome.css';
+import '@soar-awesome/soar/theme/soar.css';
+import '@awesome.me/webawesome/dist/components/button/button.js'; // an atom, from Web Awesome
+import '@soar-awesome/soar/components/ax-field.js';           // a molecule, from Soar
+```
+
+```html
+<wa-button variant="brand">Save</wa-button>
+<ax-field label="Project name" required></ax-field>
+```
+
+**CDN.** For pages without a build step, use the self-hosted CDN. Each release's `snippet.html` has the exact tags, including integrity hashes:
+
+```html
+<link rel="stylesheet" href="https://cdn.example.com/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.example.com/soar-awesome/0.1.0/soar-awesome.css" />
+<script type="module" src="https://cdn.example.com/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.example.com/soar-awesome/0.1.0/soar-awesome.min.js"></script>
+```
+
+Working React, Vue, Angular and plain-HTML examples live in the repo's `samples/` folder.
+
+**Dark mode:** add `class="wa-dark"` to `<html>`, or to any section of the page. Use the **Scheme** button in this site's toolbar to preview it.

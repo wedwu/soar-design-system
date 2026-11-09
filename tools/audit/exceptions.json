@@ -1,0 +1,39 @@
+{
+  "$comment": "Every allowed audit finding lives here, with a reason, an owner and a review date. Source code references an entry by id: CSS uses /* audit-allow <id> */ on the line; stories that turn off an a11y rule carry // audit-exception: <id>. Entries past their review date show as warnings until re-reviewed. Changes need design-system review (CODEOWNERS).",
+  "exceptions": [
+    {
+      "id": "drawer-width-no-token",
+      "check": "tokens",
+      "component": "wa-drawer",
+      "reason": "Soar's drawer is 30rem wide, but Figma has no variable for drawer width yet. Replace with var(--ax-size-drawer) once design adds size/drawer.",
+      "owner": "@soar/design-system",
+      "review": "2027-01-15"
+    },
+    {
+      "id": "control-info-select-label",
+      "check": "a11y",
+      "component": "ax-control-info",
+      "story": "molecules-control-info--settings-rows",
+      "rules": [
+        "label-title-only"
+      ],
+      "reason": "wa-select's accessible name comes from the label ax-control-info passes in and matches the visible label exactly (WCAG 2.5.3). axe can't link a visible label outside wa-select's shadow root, so this best-practice rule misfires.",
+      "owner": "@soar/design-system",
+      "review": "2027-01-15"
+    },
+    {
+      "id": "wa-tree-multiple-checkbox-labels",
+      "check": "a11y",
+      "component": "wa-tree",
+      "story": "atoms-tree--multiple",
+      "rules": [
+        "label",
+        "label-title-only"
+      ],
+      "upstream": true,
+      "reason": "Web Awesome 3.14.0 renders unlabelled checkboxes inside wa-tree-item in multiple-selection mode. It's inside Web Awesome, so Soar doesn't patch it; selection state is exposed through the tree items. Re-check on every upstream bump.",
+      "owner": "@soar/design-system",
+      "review": "2026-12-01"
+    }
+  ]
+}

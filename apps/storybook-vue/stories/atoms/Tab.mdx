@@ -1,0 +1,140 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TabStories from './Tab.stories';
+
+<Meta of={TabStories} />
+
+# Tab
+
+Splits related content into panels, showing one at a time. This is Web Awesome's `wa-tab-group` with `wa-tab` and `wa-tab-panel`, loaded from the CDN and used directly in Vue templates, exactly as on a CDN page.
+
+There are no component-specific changes. The active indicator uses the Soar brand color.
+
+Tabs always go inside `<wa-tab-group>`. Each `<wa-tab panel="x">` shows the `<wa-tab-panel name="x">` with the same name. The controls below configure the group. Switching tabs appears in the **Actions** panel.
+
+<Canvas of={TabStories.Playground} />
+
+<Controls />
+
+## Placement: start
+
+`placement` moves the tabs to the start, end or bottom.
+
+<Canvas of={TabStories.Start} />
+
+## Placement: bottom
+
+<Canvas of={TabStories.Bottom} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Set the starting tab with `active`, and track the current one with `wa-tab-show`, whose `detail.name` is the panel's name:
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const tab = ref('overview');
+</script>
+
+<template>
+  <wa-tab-group :active="tab" @wa-tab-show="tab = $event.detail.name">
+    <wa-tab panel="overview">Overview</wa-tab>
+    <wa-tab panel="invoices">Invoices</wa-tab>
+    <wa-tab-panel name="overview">Revenue is up 12% this month.</wa-tab-panel>
+    <wa-tab-panel name="invoices">5 invoices, 1 overdue.</wa-tab-panel>
+  </wa-tab-group>
+</template>
+```
+
+Bind `disabled` on a tab as `disabled || undefined`. If Vue renders the tabs before the CDN script has loaded, it writes attributes, and `disabled="false"` would still count as disabled.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Set the starting tab with `active`, and track the current one with `(wa-tab-show)`, whose `detail.name` is the panel's name.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-project-tabs',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-tab-group [attr.active]="tab()" (wa-tab-show)="tab.set($any($event).detail.name)">
+      <wa-tab panel="overview">Overview</wa-tab>
+      <wa-tab panel="invoices">Invoices</wa-tab>
+      <wa-tab-panel name="overview">Revenue is up 12% this month.</wa-tab-panel>
+      <wa-tab-panel name="invoices">5 invoices, 1 overdue.</wa-tab-panel>
+    </wa-tab-group>
+  `,
+})
+export class ProjectTabsComponent {
+  readonly tab = signal('overview');
+}
+```
+
+Bind on/off attributes with `[attr.disabled]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `disabled="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Set the starting tab with `active`, and track the current one with `onwa-tab-show`.
+
+```jsx
+import { useState } from 'react';
+
+export function ProjectTabs() {
+  const [tab, setTab] = useState('overview');
+
+  return (
+    <wa-tab-group active={tab} onwa-tab-show={(event) => setTab(event.detail.name)}>
+      <wa-tab panel="overview">Overview</wa-tab>
+      <wa-tab panel="invoices">Invoices</wa-tab>
+      <wa-tab-panel name="overview">Revenue is up 12% this month.</wa-tab-panel>
+      <wa-tab-panel name="invoices">5 invoices, 1 overdue.</wa-tab-panel>
+    </wa-tab-group>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `disabled={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Listen for `wa-tab-show`; set `active` to switch tabs from script.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-tab-group id="project-tabs" active="overview">
+  <wa-tab panel="overview">Overview</wa-tab>
+  <wa-tab panel="invoices">Invoices</wa-tab>
+  <wa-tab-panel name="overview">Revenue is up 12% this month.</wa-tab-panel>
+  <wa-tab-panel name="invoices">5 invoices, 1 overdue.</wa-tab-panel>
+</wa-tab-group>
+
+<script type="module">
+  const tabs = document.querySelector('#project-tabs');
+  tabs.addEventListener('wa-tab-show', (event) => {
+    console.log('showing:', event.detail.name);
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

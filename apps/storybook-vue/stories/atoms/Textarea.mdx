@@ -1,0 +1,123 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TextareaStories from './Textarea.stories';
+
+<Meta of={TextareaStories} />
+
+# Textarea
+
+A multi-line text field, for notes, comments and descriptions. This is Web Awesome's `wa-textarea`, loaded from the CDN and used directly in Vue templates as `<wa-textarea>`, exactly as on a CDN page.
+
+Soar makes one adjustment in `parts.css`: labels are one step smaller than the value text, through `wa-textarea::part(form-control-label)`. The component itself is untouched.
+
+Typing appears in the **Actions** panel.
+
+<Canvas of={TextareaStories.Playground} />
+
+<Controls />
+
+## Character count
+
+`with-count` shows how many characters are used; with `maxlength`, it shows the limit too.
+
+<Canvas of={TextareaStories.WithCount} />
+
+## Auto resize
+
+`resize="auto"` grows the field as the user types, starting from `rows`.
+
+<Canvas of={TextareaStories.AutoResize} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-textarea>` is a custom element, not a Vue component, so `v-model` doesn't work on it. Bind `value`, and read the current value on `input`:
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const notes = ref('');
+</script>
+
+<template>
+  <wa-textarea label="Notes" :value="notes" @input="notes = $event.target.value"></wa-textarea>
+</template>
+```
+
+Bind on/off attributes such as `required`, `disabled`, `readonly` and `with-count` as `x || undefined`. If Vue renders the field before the CDN script has loaded, it writes attributes, and `disabled="false"` would still count as disabled.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Read the current value on `(input)`.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-notes',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-textarea label="Notes" [attr.with-count]="showCount() ? '' : null" maxlength="280" (input)="notes.set($any($event.target).value)"></wa-textarea>
+  `,
+})
+export class NotesComponent {
+  readonly notes = signal('');
+  readonly showCount = signal(true);
+}
+```
+
+Bind on/off attributes with `[attr.with-count]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `with-count="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Pass `value`, and read the current one in `oninput` (the native event, lowercase).
+
+```jsx
+import { useState } from 'react';
+
+export function Notes() {
+  const [notes, setNotes] = useState('');
+
+  return (
+    <wa-textarea label="Notes" with-count maxlength={280} value={notes} oninput={(event) => setNotes(event.target.value)}></wa-textarea>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `with-count={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Read `value` on `input`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-textarea id="notes" label="Notes" with-count maxlength="280"></wa-textarea>
+
+<script type="module">
+  const notes = document.querySelector('#notes');
+  notes.addEventListener('input', () => {
+    console.log('notes:', notes.value);
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

@@ -1,0 +1,130 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as IconStories from './Icon.stories';
+
+<Meta of={IconStories} />
+
+# Icon
+
+A scalable symbol for an action, content or status. This is Web Awesome's `wa-icon`, loaded from the CDN and used directly in Vue templates as `<wa-icon>`, exactly as on a CDN page.
+
+There are no component-specific changes. Icons take the surrounding text color (`currentColor`) and size with `font-size`.
+
+Icons are decorative unless you set `label`. Always label icons that carry meaning on their own, such as in icon-only buttons; the label is what screen readers announce.
+
+**Where icons load from:** the default library fetches Font Awesome Free SVGs from the **public Font Awesome CDN**, so icons need internet access. Soar self-hosts its own packages and CDN. To keep icons off public hosts too, download the Font Awesome SVGs, serve them next to the self-hosted CDN, and call `setIconPath()` from Web Awesome before any icon renders. Loads and failures appear in the **Actions** panel as `wa-load` and `wa-error`.
+
+<Canvas of={IconStories.Playground} />
+
+<Controls />
+
+## Common icons
+
+<Canvas of={IconStories.Common} />
+
+## Variants and families
+
+`variant` picks a style of the same icon (`solid`, `regular`), and `family` a different set, such as `brands` for company logos.
+
+<Canvas of={IconStories.Variants} />
+
+## Sizing
+
+Icons follow `font-size`, so they match the text around them.
+
+<Canvas of={IconStories.Sizing} />
+
+## Rotate and flip
+
+`rotate` turns the icon by a number of degrees, and `flip` mirrors it (`x`, `y` or `both`), for example to point an arrow the other way in a right-to-left layout.
+
+<Canvas of={IconStories.RotateAndFlip} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+```vue
+<template>
+  <wa-button appearance="plain" @click="openSettings">
+    <wa-icon name="gear" label="Settings"></wa-icon>
+  </wa-button>
+  <p><wa-icon name="circle-check"></wa-icon> Saved</p>
+</template>
+```
+
+The first icon is labeled because it's the button's only content. The second is decorative, since the text next to it says the same thing.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Label icons that carry meaning on their own; leave decorative ones unlabeled.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-settings-button',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-button appearance="plain" (click)="openSettings()">
+      <wa-icon name="gear" label="Settings"></wa-icon>
+    </wa-button>
+    <p><wa-icon name="circle-check"></wa-icon> Saved</p>
+  `,
+})
+export class SettingsButtonComponent {
+  openSettings() {
+    console.log('settings');
+  }
+}
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Label icons that carry meaning on their own; leave decorative ones unlabeled.
+
+```jsx
+export function SettingsButton({ onOpen }) {
+  return (
+    <>
+      <wa-button appearance="plain" onClick={onOpen}>
+        <wa-icon name="gear" label="Settings"></wa-icon>
+      </wa-button>
+      <p><wa-icon name="circle-check"></wa-icon> Saved</p>
+    </>
+  );
+}
+```
+
+In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. No script is needed for icons themselves.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-button appearance="plain">
+  <wa-icon name="gear" label="Settings"></wa-icon>
+</wa-button>
+<p><wa-icon name="circle-check"></wa-icon> Saved</p>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

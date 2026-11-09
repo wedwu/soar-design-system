@@ -1,0 +1,1134 @@
+{
+  "package": "@awesome.me/webawesome",
+  "version": "3.14.0",
+  "elements": {
+    "wa-accordion": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-accordion-item": {
+      "parts": [
+        "accordion-item",
+        "base",
+        "button",
+        "content",
+        "heading",
+        "icon",
+        "label",
+        "panel"
+      ],
+      "cssProperties": [
+        "--easing",
+        "--hide-duration",
+        "--show-duration",
+        "--spacing"
+      ],
+      "cssStates": [
+        "animating"
+      ]
+    },
+    "wa-animated-image": {
+      "parts": [
+        "control-box"
+      ],
+      "cssProperties": [
+        "--control-box-size",
+        "--icon-size"
+      ],
+      "cssStates": []
+    },
+    "wa-animation": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-avatar": {
+      "parts": [
+        "icon",
+        "image",
+        "initials"
+      ],
+      "cssProperties": [
+        "--size"
+      ],
+      "cssStates": []
+    },
+    "wa-badge": {
+      "parts": [
+        "badge",
+        "base",
+        "end",
+        "start"
+      ],
+      "cssProperties": [
+        "--pulse-color"
+      ],
+      "cssStates": []
+    },
+    "wa-breadcrumb": {
+      "parts": [
+        "base",
+        "breadcrumb"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-breadcrumb-item": {
+      "parts": [
+        "end",
+        "label",
+        "separator",
+        "start"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-button": {
+      "parts": [
+        "base",
+        "button",
+        "caret",
+        "end",
+        "label",
+        "spinner",
+        "start"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "disabled",
+        "icon-button",
+        "link",
+        "loading"
+      ]
+    },
+    "wa-button-group": {
+      "parts": [
+        "base"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-callout": {
+      "parts": [
+        "icon",
+        "message"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-card": {
+      "parts": [
+        "actions",
+        "body",
+        "footer",
+        "header",
+        "media"
+      ],
+      "cssProperties": [
+        "--spacing"
+      ],
+      "cssStates": []
+    },
+    "wa-carousel": {
+      "parts": [
+        "base",
+        "carousel",
+        "navigation",
+        "navigation-button",
+        "navigation-button-next",
+        "navigation-button-previous",
+        "pagination",
+        "pagination-item",
+        "pagination-item-active",
+        "scroll-container"
+      ],
+      "cssProperties": [
+        "--aspect-ratio",
+        "--scroll-hint",
+        "--slide-gap"
+      ],
+      "cssStates": []
+    },
+    "wa-carousel-item": {
+      "parts": [],
+      "cssProperties": [
+        "--aspect-ratio"
+      ],
+      "cssStates": []
+    },
+    "wa-checkbox": {
+      "parts": [
+        "base",
+        "checkbox",
+        "checked-icon",
+        "control",
+        "hint",
+        "indeterminate-icon",
+        "label"
+      ],
+      "cssProperties": [
+        "--checked-icon-color",
+        "--checked-icon-scale"
+      ],
+      "cssStates": [
+        "checked",
+        "disabled",
+        "indeterminate"
+      ]
+    },
+    "wa-checkbox-group": {
+      "parts": [
+        "form-control",
+        "form-control-input",
+        "form-control-label",
+        "hint"
+      ],
+      "cssProperties": [
+        "--gap"
+      ],
+      "cssStates": []
+    },
+    "wa-color-picker": {
+      "parts": [
+        "base",
+        "color-picker",
+        "eyedropper-button",
+        "eyedropper-button__base",
+        "eyedropper-button__caret",
+        "eyedropper-button__end",
+        "eyedropper-button__label",
+        "eyedropper-button__start",
+        "form-control",
+        "form-control-input",
+        "form-control-label",
+        "format-button",
+        "format-button__base",
+        "format-button__caret",
+        "format-button__end",
+        "format-button__label",
+        "format-button__start",
+        "grid",
+        "grid-handle",
+        "hint",
+        "hue-slider",
+        "hue-slider-handle",
+        "input",
+        "opacity-slider",
+        "opacity-slider-handle",
+        "preview",
+        "slider",
+        "slider-handle",
+        "swatch",
+        "swatches",
+        "trigger",
+        "trigger-container"
+      ],
+      "cssProperties": [
+        "--grid-handle-size",
+        "--grid-height",
+        "--grid-width",
+        "--slider-handle-size",
+        "--slider-height"
+      ],
+      "cssStates": []
+    },
+    "wa-comparison": {
+      "parts": [
+        "after",
+        "base",
+        "before",
+        "comparison",
+        "divider",
+        "handle"
+      ],
+      "cssProperties": [
+        "--divider-width",
+        "--handle-size"
+      ],
+      "cssStates": [
+        "dragging"
+      ]
+    },
+    "wa-copy-button": {
+      "parts": [
+        "button",
+        "copy-icon",
+        "error-icon",
+        "feedback",
+        "success-icon"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "error",
+        "success"
+      ]
+    },
+    "wa-details": {
+      "parts": [
+        "base",
+        "content",
+        "details",
+        "header",
+        "icon",
+        "summary"
+      ],
+      "cssProperties": [
+        "--hide-duration",
+        "--show-duration",
+        "--spacing"
+      ],
+      "cssStates": [
+        "animating"
+      ]
+    },
+    "wa-dialog": {
+      "parts": [
+        "body",
+        "close-button",
+        "close-button__base",
+        "dialog",
+        "footer",
+        "header",
+        "header-actions",
+        "title"
+      ],
+      "cssProperties": [
+        "--backdrop-filter",
+        "--hide-duration",
+        "--show-duration",
+        "--spacing",
+        "--width"
+      ],
+      "cssStates": []
+    },
+    "wa-divider": {
+      "parts": [
+        "label"
+      ],
+      "cssProperties": [
+        "--color",
+        "--label-offset",
+        "--label-spacing",
+        "--spacing",
+        "--width"
+      ],
+      "cssStates": []
+    },
+    "wa-drawer": {
+      "parts": [
+        "body",
+        "close-button",
+        "close-button__base",
+        "dialog",
+        "footer",
+        "header",
+        "header-actions",
+        "title"
+      ],
+      "cssProperties": [
+        "--backdrop-filter",
+        "--hide-duration",
+        "--show-duration",
+        "--size",
+        "--spacing"
+      ],
+      "cssStates": []
+    },
+    "wa-dropdown": {
+      "parts": [
+        "base",
+        "menu"
+      ],
+      "cssProperties": [
+        "--hide-duration",
+        "--show-duration"
+      ],
+      "cssStates": []
+    },
+    "wa-dropdown-item": {
+      "parts": [
+        "checkmark",
+        "details",
+        "icon",
+        "label",
+        "submenu",
+        "submenu-icon"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "active",
+        "checked",
+        "disabled",
+        "has-submenu",
+        "link",
+        "submenu-open"
+      ]
+    },
+    "wa-format-bytes": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-format-date": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-format-number": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-icon": {
+      "parts": [
+        "svg",
+        "use"
+      ],
+      "cssProperties": [
+        "--animation-delay",
+        "--animation-direction",
+        "--animation-duration",
+        "--animation-iteration-count",
+        "--animation-timing",
+        "--beat-fade-opacity",
+        "--beat-fade-scale",
+        "--beat-scale",
+        "--bounce-anticipation",
+        "--bounce-height",
+        "--bounce-jump-scale-x",
+        "--bounce-jump-scale-y",
+        "--bounce-land-scale-x",
+        "--bounce-land-scale-y",
+        "--bounce-rebound",
+        "--bounce-start-scale-x",
+        "--bounce-start-scale-y",
+        "--buzz-distance",
+        "--fade-opacity",
+        "--flip-angle",
+        "--flip-anticipation-scale",
+        "--flip-overshoot",
+        "--flip-x",
+        "--flip-y",
+        "--flip-z",
+        "--float-drift",
+        "--float-height",
+        "--float-squash-x",
+        "--float-squash-y",
+        "--float-stretch-x",
+        "--float-stretch-y",
+        "--float-tilt",
+        "--jello-scale-x",
+        "--jello-scale-y",
+        "--primary-color",
+        "--primary-opacity",
+        "--secondary-color",
+        "--secondary-opacity",
+        "--swing-angle",
+        "--wag-angle"
+      ],
+      "cssStates": []
+    },
+    "wa-include": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-input": {
+      "parts": [
+        "base",
+        "clear-button",
+        "end",
+        "form-control-label",
+        "hint",
+        "input",
+        "input-wrapper",
+        "label",
+        "password-toggle-button",
+        "start"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "blank"
+      ]
+    },
+    "wa-intersection-observer": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-known-date": {
+      "parts": [
+        "base",
+        "field",
+        "field-day",
+        "field-input",
+        "field-label",
+        "field-month",
+        "field-year",
+        "fields",
+        "fieldset",
+        "form-control",
+        "form-control-input",
+        "form-control-label",
+        "hint",
+        "known-date",
+        "label",
+        "legend"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "blank",
+        "disabled"
+      ]
+    },
+    "wa-markdown": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-mutation-observer": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-number-input": {
+      "parts": [
+        "base",
+        "end",
+        "form-control-label",
+        "hint",
+        "input",
+        "label",
+        "number-input",
+        "start",
+        "stepper",
+        "stepper-decrement",
+        "stepper-increment"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "blank",
+        "focused"
+      ]
+    },
+    "wa-option": {
+      "parts": [
+        "checked-icon",
+        "end",
+        "label",
+        "start"
+      ],
+      "cssProperties": [
+        "--current-text-color"
+      ],
+      "cssStates": [
+        "current",
+        "disabled",
+        "hover",
+        "selected"
+      ]
+    },
+    "wa-otp-input": {
+      "parts": [
+        "hint",
+        "label",
+        "segment",
+        "segment-literal",
+        "segments"
+      ],
+      "cssProperties": [
+        "--mask-char",
+        "--segment-border-radius",
+        "--segment-gap",
+        "--segment-size"
+      ],
+      "cssStates": [
+        "--blank",
+        "--filled",
+        "disabled",
+        "readonly",
+        "user-invalid"
+      ]
+    },
+    "wa-page": {
+      "parts": [
+        "aside",
+        "banner",
+        "base",
+        "body",
+        "drawer",
+        "footer",
+        "header",
+        "main",
+        "main-content",
+        "main-footer",
+        "main-header",
+        "menu",
+        "navigation",
+        "navigation-desktop",
+        "navigation-footer",
+        "navigation-header",
+        "navigation-toggle",
+        "navigation-toggle-icon",
+        "page",
+        "skip-to-content",
+        "subheader"
+      ],
+      "cssProperties": [
+        "--aside-width",
+        "--banner-height",
+        "--header-height",
+        "--main-width",
+        "--menu-width",
+        "--subheader-height"
+      ],
+      "cssStates": []
+    },
+    "wa-pagination": {
+      "parts": [
+        "base",
+        "button",
+        "ellipsis",
+        "first-button",
+        "label",
+        "last-button",
+        "next-button",
+        "page",
+        "page-current",
+        "pages",
+        "pagination",
+        "previous-button",
+        "summary"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "disabled"
+      ]
+    },
+    "wa-popover": {
+      "parts": [
+        "body",
+        "dialog",
+        "popup",
+        "popup__arrow",
+        "popup__popup"
+      ],
+      "cssProperties": [
+        "--arrow-size",
+        "--hide-duration",
+        "--max-width",
+        "--show-duration"
+      ],
+      "cssStates": [
+        "open"
+      ]
+    },
+    "wa-popup": {
+      "parts": [
+        "arrow",
+        "hover-bridge",
+        "popup"
+      ],
+      "cssProperties": [
+        "--arrow-color",
+        "--arrow-size",
+        "--auto-size-available-height",
+        "--auto-size-available-width",
+        "--hide-duration",
+        "--popup-border-width",
+        "--show-duration"
+      ],
+      "cssStates": []
+    },
+    "wa-progress-bar": {
+      "parts": [
+        "base",
+        "indicator",
+        "label",
+        "progress-bar"
+      ],
+      "cssProperties": [
+        "--indicator-color",
+        "--track-color",
+        "--track-height"
+      ],
+      "cssStates": []
+    },
+    "wa-progress-ring": {
+      "parts": [
+        "base",
+        "indicator",
+        "label",
+        "progress-ring",
+        "track"
+      ],
+      "cssProperties": [
+        "--indicator-color",
+        "--indicator-transition-duration",
+        "--indicator-width",
+        "--size",
+        "--track-color",
+        "--track-width"
+      ],
+      "cssStates": []
+    },
+    "wa-qr-code": {
+      "parts": [
+        "base",
+        "qr-code"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-radio": {
+      "parts": [
+        "checked-icon",
+        "control",
+        "label"
+      ],
+      "cssProperties": [
+        "--checked-icon-color",
+        "--checked-icon-scale"
+      ],
+      "cssStates": [
+        "checked",
+        "disabled"
+      ]
+    },
+    "wa-radio-group": {
+      "parts": [
+        "form-control",
+        "form-control-input",
+        "form-control-label",
+        "hint"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-random-content": {
+      "parts": [],
+      "cssProperties": [
+        "--animation-duration",
+        "--animation-easing",
+        "--animation-translate"
+      ],
+      "cssStates": []
+    },
+    "wa-rating": {
+      "parts": [
+        "base",
+        "rating"
+      ],
+      "cssProperties": [
+        "--symbol-color",
+        "--symbol-color-active",
+        "--symbol-spacing"
+      ],
+      "cssStates": []
+    },
+    "wa-relative-time": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-resize-observer": {
+      "parts": [],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-scroller": {
+      "parts": [
+        "content",
+        "end-shadow",
+        "start-shadow"
+      ],
+      "cssProperties": [
+        "--shadow-color",
+        "--shadow-size"
+      ],
+      "cssStates": []
+    },
+    "wa-select": {
+      "parts": [
+        "clear-button",
+        "combobox",
+        "display-input",
+        "end",
+        "expand-icon",
+        "form-control",
+        "form-control-input",
+        "form-control-label",
+        "hint",
+        "label",
+        "listbox",
+        "start",
+        "tag",
+        "tag__content",
+        "tag__remove-button",
+        "tag__remove-button__base",
+        "tags"
+      ],
+      "cssProperties": [
+        "--hide-duration",
+        "--show-duration",
+        "--tag-max-size"
+      ],
+      "cssStates": [
+        "blank"
+      ]
+    },
+    "wa-skeleton": {
+      "parts": [
+        "indicator"
+      ],
+      "cssProperties": [
+        "--color",
+        "--sheen-color"
+      ],
+      "cssStates": []
+    },
+    "wa-slider": {
+      "parts": [
+        "hint",
+        "indicator",
+        "label",
+        "marker",
+        "markers",
+        "references",
+        "slider",
+        "thumb",
+        "thumb-max",
+        "thumb-min",
+        "tooltip",
+        "tooltip__arrow",
+        "tooltip__body",
+        "tooltip__tooltip",
+        "track"
+      ],
+      "cssProperties": [
+        "--marker-height",
+        "--marker-width",
+        "--thumb-height",
+        "--thumb-width",
+        "--track-size"
+      ],
+      "cssStates": [
+        "disabled",
+        "dragging",
+        "focused",
+        "user-invalid",
+        "user-valid"
+      ]
+    },
+    "wa-spinner": {
+      "parts": [
+        "base",
+        "spinner"
+      ],
+      "cssProperties": [
+        "--indicator-color",
+        "--speed",
+        "--track-color",
+        "--track-width"
+      ],
+      "cssStates": []
+    },
+    "wa-split-panel": {
+      "parts": [
+        "divider",
+        "end",
+        "panel",
+        "start"
+      ],
+      "cssProperties": [
+        "--divider-hit-area",
+        "--divider-width",
+        "--max",
+        "--min"
+      ],
+      "cssStates": []
+    },
+    "wa-step": {
+      "parts": [
+        "button",
+        "connector",
+        "content",
+        "description",
+        "label",
+        "marker",
+        "spinner",
+        "status",
+        "step"
+      ],
+      "cssProperties": [
+        "--pulse-color"
+      ],
+      "cssStates": [
+        "active",
+        "clickable",
+        "completed",
+        "disabled",
+        "loading",
+        "locked"
+      ]
+    },
+    "wa-stepper": {
+      "parts": [
+        "stepper",
+        "steps",
+        "summary"
+      ],
+      "cssProperties": [
+        "--connector-color",
+        "--connector-color-active",
+        "--connector-gap",
+        "--connector-width",
+        "--gap",
+        "--marker-size"
+      ],
+      "cssStates": [
+        "completed",
+        "loading",
+        "stacked"
+      ]
+    },
+    "wa-switch": {
+      "parts": [
+        "base",
+        "control",
+        "hint",
+        "label",
+        "switch",
+        "thumb"
+      ],
+      "cssProperties": [
+        "--height",
+        "--thumb-size",
+        "--width"
+      ],
+      "cssStates": []
+    },
+    "wa-tab": {
+      "parts": [
+        "base",
+        "tab"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-tab-group": {
+      "parts": [
+        "base",
+        "body",
+        "nav",
+        "scroll-button",
+        "scroll-button-end",
+        "scroll-button-start",
+        "scroll-button__base",
+        "tab-group",
+        "tabs"
+      ],
+      "cssProperties": [
+        "--indicator-color",
+        "--track-color",
+        "--track-width"
+      ],
+      "cssStates": []
+    },
+    "wa-tab-panel": {
+      "parts": [
+        "base"
+      ],
+      "cssProperties": [
+        "--padding"
+      ],
+      "cssStates": []
+    },
+    "wa-tag": {
+      "parts": [
+        "base",
+        "content",
+        "remove-button",
+        "remove-button__base"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    },
+    "wa-tag-input": {
+      "parts": [
+        "clear-button",
+        "end",
+        "form-control-label",
+        "hint",
+        "input",
+        "start",
+        "tag",
+        "tag-input",
+        "tag__content",
+        "tag__remove-button",
+        "tag__remove-button__base",
+        "tags"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "blank",
+        "readonly"
+      ]
+    },
+    "wa-textarea": {
+      "parts": [
+        "base",
+        "count",
+        "form-control-label",
+        "hint",
+        "label",
+        "textarea",
+        "textarea-adjuster",
+        "textarea-wrapper"
+      ],
+      "cssProperties": [],
+      "cssStates": [
+        "blank"
+      ]
+    },
+    "wa-time-input": {
+      "parts": [
+        "base",
+        "clear-button",
+        "column",
+        "column-item",
+        "column-item-selected",
+        "columns",
+        "end",
+        "expand-button",
+        "expand-icon",
+        "form-control",
+        "form-control-input",
+        "form-control-label",
+        "hint",
+        "input",
+        "input-wrapper",
+        "label",
+        "now-button",
+        "popup",
+        "segment",
+        "segment-literal",
+        "start",
+        "time-input"
+      ],
+      "cssProperties": [
+        "--column-item-height",
+        "--column-width",
+        "--hide-duration",
+        "--show-duration"
+      ],
+      "cssStates": [
+        "blank",
+        "disabled",
+        "open"
+      ]
+    },
+    "wa-toast": {
+      "parts": [
+        "stack"
+      ],
+      "cssProperties": [
+        "--gap",
+        "--width"
+      ],
+      "cssStates": [
+        "visible"
+      ]
+    },
+    "wa-toast-item": {
+      "parts": [
+        "accent",
+        "close-button",
+        "close-icon",
+        "close-icon__svg",
+        "content",
+        "icon",
+        "progress-ring",
+        "progress-ring__base",
+        "progress-ring__indicator",
+        "progress-ring__label",
+        "progress-ring__track",
+        "toast-item"
+      ],
+      "cssProperties": [
+        "--accent-width",
+        "--hide-duration",
+        "--padding",
+        "--show-duration"
+      ],
+      "cssStates": []
+    },
+    "wa-tooltip": {
+      "parts": [
+        "base",
+        "base__arrow",
+        "base__popup",
+        "body",
+        "tooltip"
+      ],
+      "cssProperties": [
+        "--max-width"
+      ],
+      "cssStates": []
+    },
+    "wa-tree": {
+      "parts": [
+        "base",
+        "tree"
+      ],
+      "cssProperties": [
+        "--indent-guide-color",
+        "--indent-guide-offset",
+        "--indent-guide-style",
+        "--indent-guide-width",
+        "--indent-size"
+      ],
+      "cssStates": []
+    },
+    "wa-tree-item": {
+      "parts": [
+        "base",
+        "checkbox",
+        "checkbox__base",
+        "checkbox__checked-icon",
+        "checkbox__control",
+        "checkbox__indeterminate-icon",
+        "checkbox__label",
+        "children",
+        "expand-button",
+        "indentation",
+        "item",
+        "label",
+        "spinner",
+        "spinner__base",
+        "tree-item"
+      ],
+      "cssProperties": [
+        "--hide-duration",
+        "--show-duration"
+      ],
+      "cssStates": [
+        "disabled",
+        "expanded",
+        "indeterminate",
+        "selected"
+      ]
+    },
+    "wa-zoomable-frame": {
+      "parts": [
+        "controls",
+        "iframe",
+        "zoom-in-button",
+        "zoom-out-button"
+      ],
+      "cssProperties": [],
+      "cssStates": []
+    }
+  }
+}

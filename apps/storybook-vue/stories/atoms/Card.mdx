@@ -1,0 +1,132 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CardStories from './Card.stories';
+
+<Meta of={CardStories} />
+
+# Card
+
+Groups related content and actions in a container. This is Web Awesome's `wa-card`, loaded from the CDN and used directly in Vue templates as `<wa-card>`, exactly as on a CDN page.
+
+Soar makes one adjustment in `parts.css`: the header sits on the lowered surface with a hairline line under it, through `wa-card::part(header)`. Web Awesome has no token for a card header background. Accent cards keep Web Awesome's header, because their text is white. The component itself is untouched.
+
+Content goes in the `header`, default (body) and `footer` slots. Cards also have `media`, `actions`, `header-actions` and `footer-actions` slots.
+
+<Canvas of={CardStories.Playground} />
+
+<Controls />
+
+## Body only
+
+Leave out the header and footer for a plain container.
+
+<Canvas of={CardStories.BodyOnly} />
+
+## Appearances
+
+<Canvas of={CardStories.Appearances} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-card>` has no on/off attributes or events, so it works in Vue templates as written. Put content in its slots with the `slot` attribute (`<div slot="header">`), not Vue's `#header` syntax, which only works on Vue components.
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const used = ref(62);
+const emit = defineEmits(['upgrade']);
+</script>
+
+<template>
+  <wa-card>
+    <strong slot="header">Usage this month</strong>
+    You've used {{ used }}% of your plan's API quota.
+    <wa-button slot="footer" size="s" variant="brand" @click="emit('upgrade')">Upgrade</wa-button>
+  </wa-card>
+</template>
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Put content in the card's slots with the `slot` attribute.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-usage-card',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-card>
+      <strong slot="header">Usage this month</strong>
+      You've used {{ used() }}% of your plan's API quota.
+      <wa-button slot="footer" size="s" variant="brand" (click)="upgrade()">Upgrade</wa-button>
+    </wa-card>
+  `,
+})
+export class UsageCardComponent {
+  readonly used = signal(62);
+
+  upgrade() {
+    console.log('upgrade');
+  }
+}
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Put content in the card's slots with the `slot` attribute.
+
+```jsx
+export function UsageCard({ used = 62, onUpgrade }) {
+  return (
+    <wa-card>
+      <strong slot="header">Usage this month</strong>
+      You've used {used}% of your plan's API quota.
+      <wa-button slot="footer" size="s" variant="brand" onClick={onUpgrade}>Upgrade</wa-button>
+    </wa-card>
+  );
+}
+```
+
+In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Write the card as HTML; script only its buttons.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-card>
+  <strong slot="header">Usage this month</strong>
+  You've used 62% of your plan's API quota.
+  <wa-button id="upgrade" slot="footer" size="s" variant="brand">Upgrade</wa-button>
+</wa-card>
+
+<script type="module">
+  document.querySelector('#upgrade').addEventListener('click', () => {
+    console.log('upgrade');
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

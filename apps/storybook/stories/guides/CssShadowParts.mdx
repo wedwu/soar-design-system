@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { WA_VERSION, atoms, waElements, soarStyledParts } from '../../src/catalog';
+
+<Meta title="Guides/CSS Shadow Parts" />
+
+# CSS shadow parts
+
+Each component draws its insides in a private area called the **shadow DOM**. Your page's CSS can't reach in there, which is what stops app styles from accidentally breaking a component.
+
+A **shadow part** is an element inside that a component deliberately exposes for styling. You target it from outside with the `::part()` selector:
+
+```css
+wa-card::part(header) {
+  background: var(--wa-color-surface-lowered);
+}
+```
+
+## Try these first
+
+Parts are the **last resort**. Use the first option on this list that works:
+
+1. **A design token.** For example, `--wa-color-brand-fill-loud` or `--wa-border-radius-m`. To change it for everyone, change the Figma variable behind it.
+2. **The component's own CSS custom properties.** For example, `wa-drawer { --size: 30rem }`. Each atom's Docs page lists these.
+3. **A shadow part.** Use one only when neither of the above can express what you need.
+
+Tokens and custom properties are part of Web Awesome's stable styling interface. Parts expose more of a component's internal structure, so they're more likely to need attention after an upgrade.
+
+## What `::part()` can and can't do
+
+- **Can:** style the part element itself, including pseudo-classes such as `wa-button::part(base):hover`.
+- **Can't:** reach elements *inside* the part. `::part(header) h2` does nothing.
+- **Can't:** reach a component's insides unless they're exposed as a part. Anything not listed for an element in the table below can't be styled from outside.
+- **Some parts have sub-parts.** A part like `close-button__base` is a part of a component nested inside another one.
+
+## How Soar uses parts
+
+Soar's own part rules live in **one file**, `packages/theme/src/parts.css`. Its rules:
+
+- **Tokens only.** Every value is a `var(--ax-*)` or `var(--wa-*)` token, never a raw color or size.
+- **Checked against Web Awesome.** `npm run check:ownership` fails if a rule names a part that doesn't exist in the current Web Awesome version, so an upgrade that renames a part fails loudly instead of silently un-styling the component.
+- **Lowest priority.** The rules sit in the `ax-parts` cascade layer, so an app's own CSS still wins without `!important`.
+
+**In your app**, style parts the same way: only with tokens, and only when there's no token or custom property for the change. If several apps need the same change, raise it with the design system team so it moves into `parts.css` once.
+
+## Parts by component
+
+Generated from Web Awesome {WA_VERSION}'s metadata for every atom documented here. Parts marked **Soar** are restyled in `parts.css`.
+
+<table>
+  <thead>
+    <tr><th>Element</th><th>Part</th><th>What it is</th><th>Soar</th></tr>
+  </thead>
+  <tbody>
+    {atoms.flatMap((a) =>
+      a.tags.flatMap((tag) =>
+        (waElements[tag]?.cssParts ?? []).map((p, i) => (
+          <tr key={`${tag}-${p.name}`}>
+            <td>{i === 0 ? <code>{`<${tag}>`}</code> : null}</td>
+            <td><code>{`::part(${p.name})`}</code></td>
+            <td>{p.description}</td>
+            <td>{soarStyledParts.has(`${tag}::part(${p.name})`) ? <strong>Soar</strong> : ''}</td>
+          </tr>
+        )),
+      ),
+    )}
+  </tbody>
+</table>

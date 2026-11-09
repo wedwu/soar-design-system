@@ -1,0 +1,145 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SelectStories from './Select.stories';
+
+<Meta of={SelectStories} />
+
+# Select
+
+Lets users pick one option, or several, from a list. This is Web Awesome's `wa-select` with `wa-option` choices, loaded from the CDN and used directly in Vue templates, exactly as on a CDN page.
+
+Soar makes one adjustment in `parts.css`: labels are one step smaller than the value text, through `wa-select::part(form-control-label)`. The component itself is untouched.
+
+Set the starting selection with `selected` on each `<wa-option>`, as with a native `<select>`. Choices appear in the **Actions** panel.
+
+<Canvas of={SelectStories.Playground} />
+
+<Controls />
+
+## Multiple
+
+`multiple` allows several choices, shown as tags. `with-clear` adds a button that clears them all.
+
+<Canvas of={SelectStories.Multiple} />
+
+## Placeholder
+
+`placeholder` shows hint text until something is chosen.
+
+<Canvas of={SelectStories.Placeholder} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-select>` is a custom element, not a Vue component, so `v-model` doesn't work on it. Mark the starting option with `selected`, and read the current value on `change`. With `multiple`, `value` is an array.
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const region = ref('us');
+</script>
+
+<template>
+  <wa-select label="Region" @change="region = $event.target.value">
+    <wa-option value="us" :selected="region === 'us' || undefined">United States</wa-option>
+    <wa-option value="eu" :selected="region === 'eu' || undefined">European Union</wa-option>
+  </wa-select>
+</template>
+```
+
+Bind on/off attributes such as `selected`, `multiple`, `disabled` and `required` as `x || undefined`. If Vue renders the select before the CDN script has loaded, it writes attributes, and `disabled="false"` would still count as disabled.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Mark the starting option with `selected`, and read the value on `(change)`. With `multiple`, `value` is an array.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-region-select',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-select label="Region" (change)="region.set($any($event.target).value)">
+      @for (option of regions; track option.value) {
+        <wa-option [value]="option.value" [attr.selected]="region() === option.value ? '' : null">{{ option.text }}</wa-option>
+      }
+    </wa-select>
+  `,
+})
+export class RegionSelectComponent {
+  readonly regions = [
+    { value: 'us', text: 'United States' },
+    { value: 'eu', text: 'European Union' },
+  ];
+  readonly region = signal('us');
+}
+```
+
+Bind on/off attributes with `[attr.selected]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `selected="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Mark the starting option with `selected`, and read the value in `onchange` (the native event, lowercase).
+
+```jsx
+import { useState } from 'react';
+
+const regions = [
+  { value: 'us', text: 'United States' },
+  { value: 'eu', text: 'European Union' },
+];
+
+export function RegionSelect() {
+  const [region, setRegion] = useState('us');
+
+  return (
+    <wa-select label="Region" onchange={(event) => setRegion(event.target.value)}>
+      {regions.map((option) => (
+        <wa-option key={option.value} value={option.value} selected={region === option.value}>{option.text}</wa-option>
+      ))}
+    </wa-select>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `selected={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Read `value` on `change`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-select id="region" label="Region">
+  <wa-option value="us" selected>United States</wa-option>
+  <wa-option value="eu">European Union</wa-option>
+</wa-select>
+
+<script type="module">
+  const select = document.querySelector('#region');
+  select.addEventListener('change', () => {
+    console.log('region:', select.value);
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

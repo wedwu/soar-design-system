@@ -1,0 +1,8 @@
+{
+  "wa-breadcrumb": ["wa-breadcrumb-item"],
+  "wa-dropdown": ["wa-dropdown-item"],
+  "wa-radio-group": ["wa-radio"],
+  "wa-select": ["wa-option"],
+  "wa-tab-group": ["wa-tab", "wa-tab-panel"],
+  "wa-tree": ["wa-tree-item"]
+}

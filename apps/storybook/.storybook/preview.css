@@ -1,0 +1,51 @@
+/* Storybook canvas only. Not shipped. */
+body {
+  background: var(--wa-color-surface-default);
+  color: var(--wa-color-text-normal);
+}
+
+.sb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--wa-space-m);
+}
+
+.sb-swatch {
+  display: grid;
+  gap: var(--wa-space-2xs);
+  font-size: var(--wa-font-size-xs);
+}
+
+.sb-swatch > div {
+  height: 3rem;
+  border-radius: var(--wa-border-radius-m);
+  border: var(--wa-border-width-s) solid var(--wa-color-surface-border);
+}
+
+.sb-swatch code,
+.sb-table code {
+  font-family: var(--wa-font-family-code);
+  color: var(--wa-color-text-quiet);
+  word-break: break-all;
+}
+
+.sb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--wa-font-size-s);
+}
+
+.sb-table th,
+.sb-table td {
+  text-align: start;
+  padding: var(--wa-space-2xs) var(--wa-space-s);
+  border-block-end: var(--wa-border-width-s) solid var(--wa-color-surface-border);
+  vertical-align: top;
+}
+
+.sb-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wa-space-s);
+  align-items: center;
+}

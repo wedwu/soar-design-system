@@ -1,0 +1,8 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "textarea" },
+  "label": "Notes",
+  "hint": "Visible to your team only",
+  "placeholder": "Add context for the next reviewer…",
+  "withCount": { "label": "Status update", "maxlength": 280 },
+  "autoResize": { "label": "Grows as you type", "rows": 2 }
+}

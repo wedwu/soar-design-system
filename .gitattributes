@@ -1,0 +1,7 @@
+# Keep LF line endings on every OS. Generated files (token CSS, snapshots) are
+# compared byte-for-byte by `npm run tokens:check`, and Windows' default CRLF
+# checkout would otherwise make clean files look modified.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.woff2 binary

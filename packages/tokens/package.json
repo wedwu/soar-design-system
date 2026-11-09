@@ -1,0 +1,31 @@
+{
+  "name": "@soar-awesome/tokens",
+  "version": "0.1.0",
+  "description": "Soar design tokens, generated from Figma variables. Figma is the only source of truth.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "build",
+    "upstream",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./build/tokens.d.ts",
+      "import": "./build/tokens.js"
+    },
+    "./tokens.json": "./build/tokens.json",
+    "./tokens.dtcg.json": "./build/tokens.dtcg.json",
+    "./css/*": "./build/*",
+    "./scss": "./build/_tokens.scss",
+    "./scss/breakpoints": "./build/_breakpoints.scss",
+    "./upstream/*": "./upstream/*",
+    "./figma/*": "./figma/*",
+    "./src/*": "./src/*"
+  },
+  "scripts": {
+    "build": "node src/build.mjs",
+    "test": "node --test"
+  }
+}

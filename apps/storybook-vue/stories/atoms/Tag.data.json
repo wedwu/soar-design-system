@@ -1,0 +1,8 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "tag" },
+  "text": "Design system",
+  "variants": ["brand", "neutral", "success", "warning", "danger"],
+  "appearances": ["accent", "filled", "outlined", "filled-outlined"],
+  "sizes": ["s", "m", "l"],
+  "removable": ["invoices", "mentions", "deploys", "billing"]
+}

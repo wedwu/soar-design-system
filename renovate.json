@@ -1,0 +1,21 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "Web Awesome bumps need human intake: CI fails upstream:check until someone runs `npm run upstream:bump` and classifies changes.",
+      "matchPackageNames": [
+        "@awesome.me/webawesome"
+      ],
+      "groupName": "Web Awesome",
+      "labels": [
+        "upstream",
+        "needs-decision"
+      ],
+      "automerge": false,
+      "rangeStrategy": "pin"
+    }
+  ]
+}

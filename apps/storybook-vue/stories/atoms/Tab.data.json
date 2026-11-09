@@ -1,0 +1,10 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "tab-group" },
+  "active": "overview",
+  "tabs": [
+    { "panel": "overview", "text": "Overview", "content": "Revenue is up 12% this month." },
+    { "panel": "invoices", "text": "Invoices", "content": "5 invoices, 1 overdue." },
+    { "panel": "settings", "text": "Settings", "content": "Workspace settings go here." },
+    { "panel": "audit", "text": "Audit log", "content": "Available on the Business plan.", "disabled": true }
+  ]
+}

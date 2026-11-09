@@ -1,0 +1,10 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "skeleton" },
+  "effects": ["none", "pulse", "sheen"],
+  "card": {
+    "effect": "sheen",
+    "avatar": "width: 3rem; height: 3rem; border-radius: var(--wa-border-radius-circle)",
+    "name": "flex: 1; height: 1rem",
+    "lines": ["", "", "width: 60%"]
+  }
+}

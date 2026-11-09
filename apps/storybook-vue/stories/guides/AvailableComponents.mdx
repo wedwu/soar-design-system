@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { WA_VERSION, atoms, soarComponents, undocumented } from '../../src/catalog';
+
+<Meta title="Guides/Available Components" />
+
+{/* Links don't wrap <code>: Storybook's link color on its code background fails contrast. */}
+
+# Available components
+
+Everything on this page is generated: from this Storybook's atom pages, from Web Awesome {WA_VERSION}'s own component metadata on the CDN, and from Soar Awesome's component manifest. It updates itself when an atom page is added or Web Awesome is upgraded.
+
+**Loading:** with the CDN there's nothing to import. Every `<wa-*>` element loads itself the first time it appears on the page, through Web Awesome's loader script, and Soar Awesome's bundle registers the `<ax-*>` components. The four `<link>`/`<script>` tags are in each release's `snippet.html`.
+
+## Atoms ({atoms.length})
+
+Web Awesome components, restyled by Soar Awesome. Each page shows the component in Vue, with examples for Angular, React and plain JavaScript.
+
+<table>
+  <thead>
+    <tr><th>Component</th><th>Elements</th><th>What it's for</th></tr>
+  </thead>
+  <tbody>
+    {atoms.map((a) => (
+      <tr key={a.tag}>
+        <td><a href={a.href} target="_top"><strong>{a.name}</strong></a></td>
+        <td>{a.tags.map((t) => <code key={t} style={{ display: 'block' }}>{`<${t}>`}</code>)}</td>
+        <td>{a.description}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Molecules and organisms ({soarComponents.length})
+
+Built by Soar Awesome from atoms, and included in the Soar Awesome CDN bundle (`soarawesome.min.js`). They're documented in the main Storybook.
+
+<table>
+  <thead>
+    <tr><th>Component</th><th>Layer</th><th>What it's for</th></tr>
+  </thead>
+  <tbody>
+    {soarComponents.map((c) => (
+      <tr key={c.tag}>
+        <td><code>{`<${c.tag}>`}</code></td>
+        <td>{c.layer}</td>
+        <td>{c.description}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## In Web Awesome, not yet documented here ({undocumented.length})
+
+These are on the CDN with the rest of Web Awesome, so they **work today** and pick up Soar Awesome's colors, spacing and type automatically. They haven't been reviewed or documented as atoms in this Storybook yet.
+
+- **Use with care.** Check the [Web Awesome docs](https://webawesome.com/docs/components) for usage, and check accessibility yourself.
+- **To promote one,** add `<Name>.stories.ts`, `<Name>.data.json` (with its Web Awesome page under `design.webAwesomeDocs`) and `<Name>.mdx` under `stories/atoms/`. It then moves to the Atoms table above automatically.
+
+<table>
+  <thead>
+    <tr><th>Element</th><th>What it's for</th></tr>
+  </thead>
+  <tbody>
+    {undocumented.map((u) => (
+      <tr key={u.tag}>
+        <td><a href={`https://webawesome.com/docs/components/${u.tag.replace(/^wa-/, '')}`} target="_blank" rel="noreferrer">{`<${u.tag}>`}</a></td>
+        <td>{u.description}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>

@@ -1,0 +1,115 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SkeletonStories from './Skeleton.stories';
+
+<Meta of={SkeletonStories} />
+
+# Skeleton
+
+A placeholder shape shown while content loads, so the layout doesn't jump when it arrives. This is Web Awesome's `wa-skeleton`, loaded from the CDN and used directly in Vue templates as `<wa-skeleton>`, exactly as on a CDN page.
+
+There are no component-specific changes.
+
+Size skeletons with `width` and `height`, and shape them with `border-radius`, to match the content they stand in for.
+
+<Canvas of={SkeletonStories.Playground} />
+
+<Controls />
+
+## Effects
+
+`effect` adds movement: `pulse` fades in and out, `sheen` sweeps a highlight across.
+
+<Canvas of={SkeletonStories.Effects} />
+
+## Card placeholder
+
+Combine shapes to match the layout of what's loading, here an avatar, a name and three lines of text.
+
+<Canvas of={SkeletonStories.CardPlaceholder} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Show skeletons while data loads, then swap in the real content:
+
+```vue
+<template>
+  <wa-skeleton v-if="loading" effect="sheen"></wa-skeleton>
+  <p v-else>{{ summary }}</p>
+</template>
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Show skeletons while data loads, then swap in the real content.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-summary',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    @if (summary(); as text) {
+      <p>{{ text }}</p>
+    } @else {
+      <wa-skeleton effect="sheen"></wa-skeleton>
+    }
+  `,
+})
+export class SummaryComponent {
+  readonly summary = signal<string | null>(null);
+
+  constructor() {
+    setTimeout(() => this.summary.set('Revenue is up 12% this month.'), 1000);
+  }
+}
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Show skeletons while data loads, then swap in the real content.
+
+```jsx
+export function Summary({ summary }) {
+  return summary ? <p>{summary}</p> : <wa-skeleton effect="sheen"></wa-skeleton>;
+}
+```
+
+In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Replace the skeleton once the content arrives.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<div id="summary"><wa-skeleton effect="sheen"></wa-skeleton></div>
+
+<script type="module">
+  setTimeout(() => {
+    document.querySelector('#summary').textContent = 'Revenue is up 12% this month.';
+  }, 1000);
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

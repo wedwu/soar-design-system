@@ -1,0 +1,119 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SpinnerStories from './Spinner.stories';
+
+<Meta of={SpinnerStories} />
+
+# Spinner
+
+Shows that something is loading when you can't say how long it will take. This is Web Awesome's `wa-spinner`, loaded from the CDN and used directly in Vue templates as `<wa-spinner>`, exactly as on a CDN page.
+
+There are no component-specific changes. The indicator uses the Soar brand fill.
+
+A spinner has no attributes. It scales with `font-size`, and its look is set with CSS custom properties: `--track-width`, `--track-color`, `--indicator-color` and `--speed`.
+
+<Canvas of={SpinnerStories.Playground} />
+
+<Controls />
+
+## Sizes
+
+<Canvas of={SpinnerStories.Sizes} />
+
+## Track width
+
+`--track-width` sets the ring's thickness.
+
+<Canvas of={SpinnerStories.TrackWidth} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+Show it while something loads. Inside a button, use the button's own `loading` attribute instead.
+
+```vue
+<template>
+  <wa-spinner v-if="loading" style="font-size: 2rem" aria-label="Loading invoices"></wa-spinner>
+  <invoice-list v-else :invoices="invoices" />
+</template>
+```
+
+Give a spinner that stands alone an `aria-label`, so screen readers announce what's loading.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Show it while something loads, with an `aria-label` saying what. Inside a button, use the button's `loading` instead.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-invoice-count',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    @if (loading()) {
+      <wa-spinner style="font-size: 2rem" aria-label="Loading invoices"></wa-spinner>
+    } @else {
+      <p>5 invoices</p>
+    }
+  `,
+})
+export class InvoiceCountComponent {
+  readonly loading = signal(true);
+
+  constructor() {
+    setTimeout(() => this.loading.set(false), 1000);
+  }
+}
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Show it while something loads, with an `aria-label` saying what.
+
+```jsx
+export function InvoiceCount({ loading, count }) {
+  return loading
+    ? <wa-spinner style={{ fontSize: '2rem' }} aria-label="Loading invoices"></wa-spinner>
+    : <p>{count} invoices</p>;
+}
+```
+
+In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Remove the spinner once loading finishes.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<div id="invoices">
+  <wa-spinner style="font-size: 2rem" aria-label="Loading invoices"></wa-spinner>
+</div>
+
+<script type="module">
+  setTimeout(() => {
+    document.querySelector('#invoices').textContent = '5 invoices';
+  }, 1000);
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

@@ -1,0 +1,16 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "badge" },
+  "text": "New",
+  "variants": ["brand", "neutral", "success", "warning", "danger"],
+  "appearances": ["accent", "filled", "outlined", "filled-outlined"],
+  "attention": [
+    { "button": "Inbox", "count": "4", "variant": "brand", "attention": "pulse" },
+    { "button": "Alerts", "count": "2", "variant": "danger", "attention": "bounce" }
+  ],
+  "decorations": [
+    { "text": "Verified", "variant": "success", "start": "circle-check" },
+    { "text": "Beta", "variant": "brand", "end": "flask" },
+    { "text": "Shipped", "variant": "neutral", "start": "truck", "end": "arrow-right" },
+    { "text": "3 errors", "variant": "danger", "start": "triangle-exclamation" }
+  ]
+}

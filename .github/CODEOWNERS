@@ -1,0 +1,14 @@
+# Ownership decisions need design-system owners
+/packages/tokens/src/alias-map.mjs   @wedwu
+/packages/tokens/src/inherited.json  @wedwu
+/packages/theme/src/parts.css        @wedwu
+/packages/tokens/upstream/           @wedwu
+/tools/audit/exceptions.json         @wedwu
+
+# Figma export is machine-written; design signs off on the values
+/packages/tokens/figma/              @wedwu
+
+# How packages and the CDN are released (never to a registry)
+/packages/soar/                    @wedwu
+/.github/workflows/release.yml       @wedwu
+/tools/release/                      @wedwu

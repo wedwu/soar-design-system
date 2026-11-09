@@ -1,0 +1,63 @@
+{
+  "name": "@soar-awesome/soar",
+  "version": "0.1.0",
+  "description": "Everything an app installs: the theme, components and tokens in one package. Shipped as a tarball, never published to a registry.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "customElements": "./dist/components/custom-elements.json",
+  "exports": {
+    "./theme": "./dist/theme/soar.css",
+    "./theme/soar.css": "./dist/theme/soar.css",
+    "./theme/tokens.css": "./dist/theme/tokens.css",
+    "./theme/light.css": "./dist/theme/light.css",
+    "./theme/dark.css": "./dist/theme/dark.css",
+    "./theme/webawesome.css": "./dist/theme/webawesome.css",
+    "./theme/parts.css": "./dist/theme/parts.css",
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./components/ax-field.js": {
+      "types": "./dist/components/molecules/ax-field/ax-field.d.ts",
+      "import": "./dist/components/molecules/ax-field/ax-field.js"
+    },
+    "./components/ax-control-info.js": {
+      "types": "./dist/components/molecules/ax-control-info/ax-control-info.d.ts",
+      "import": "./dist/components/molecules/ax-control-info/ax-control-info.js"
+    },
+    "./components/ax-data-table.js": {
+      "types": "./dist/components/organisms/ax-data-table/ax-data-table.d.ts",
+      "import": "./dist/components/organisms/ax-data-table/ax-data-table.js"
+    },
+    "./components/custom-elements.json": "./dist/components/custom-elements.json",
+    "./tokens": {
+      "types": "./dist/tokens/tokens.d.ts",
+      "import": "./dist/tokens/tokens.js"
+    },
+    "./tokens/tokens.json": "./dist/tokens/tokens.json",
+    "./tokens/tokens.dtcg.json": "./dist/tokens/tokens.dtcg.json",
+    "./tokens/css/*": "./dist/tokens/*",
+    "./tokens/scss": "./dist/tokens/_tokens.scss",
+    "./tokens/scss/breakpoints": "./dist/tokens/_breakpoints.scss",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "lit": "^3.3.1"
+  },
+  "peerDependencies": {
+    "@awesome.me/webawesome": "~3.14.0"
+  },
+  "devDependencies": {
+    "@soar-awesome/components": "*",
+    "@soar-awesome/theme": "*",
+    "@soar-awesome/tokens": "*"
+  }
+}

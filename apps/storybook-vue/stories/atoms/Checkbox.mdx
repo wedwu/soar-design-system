@@ -1,0 +1,140 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CheckboxStories from './Checkbox.stories';
+
+<Meta of={CheckboxStories} />
+
+# Checkbox
+
+Lets users turn an option on or off, or pick several items from a list. This is Web Awesome's `wa-checkbox`, loaded from the CDN and used directly in Vue templates as `<wa-checkbox>`, exactly as on a CDN page.
+
+There are no component-specific changes. The checked fill uses `--wa-form-control-activated-color`, which resolves to the Soar brand fill.
+
+<Canvas of={CheckboxStories.Playground} />
+
+<Controls />
+
+## States
+
+`checked` sets the starting state, `indeterminate` shows a partly selected state (for example a "select all" box when only some items are selected), and `disabled` blocks interaction.
+
+<Canvas of={CheckboxStories.States} />
+
+## With hint
+
+`hint` adds help text under the label.
+
+<Canvas of={CheckboxStories.WithHint} />
+
+## Sizes
+
+<Canvas of={CheckboxStories.Sizes} />
+
+## Error
+
+A checkbox is invalid when it's `required` and unchecked, or when `custom-error` holds a message. The error shows when the form is submitted, or when you call `reportValidity()`. The checkbox then fires `wa-invalid`, and the browser shows the message. Remove `custom-error` (or call `setCustomValidity('')`) to clear it.
+
+Web Awesome doesn't style invalid checkboxes, so the red border and label come from the CSS rule in this example. It uses `:state(user-invalid)`, which only applies after the error has been shown, so an untouched form doesn't start out red. Press **Continue** without checking the box to see it, or turn on **showError** below. Change the message with **custom-error**; clearing it and turning off **required** makes the checkbox valid.
+
+<Canvas of={CheckboxStories.ErrorState} />
+
+<Controls of={CheckboxStories.ErrorState} />
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-checkbox>` is a custom element, not a Vue component, so `v-model` doesn't work on it. Set the starting state with `checked`, and read the current one from the checkbox on `change`:
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const updates = ref(false);
+</script>
+
+<template>
+  <wa-checkbox :checked="updates || undefined" @change="updates = $event.target.checked">
+    Email me about product updates
+  </wa-checkbox>
+</template>
+```
+
+Bind on/off attributes such as `checked`, `disabled` and `required` as `x || undefined`. If Vue renders the checkbox before the CDN script has loaded, it writes attributes, and `checked="false"` would still count as checked.
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Set the starting state with `checked`, and read the current one on `(change)`.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-updates-checkbox',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-checkbox [attr.checked]="updates() ? '' : null" (change)="updates.set($any($event.target).checked)">
+      Email me about product updates
+    </wa-checkbox>
+  `,
+})
+export class UpdatesCheckboxComponent {
+  readonly updates = signal(false);
+}
+```
+
+Bind on/off attributes with `[attr.checked]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `checked="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Pass `checked`, and read the current state in `onchange` (the native event, lowercase).
+
+```jsx
+import { useState } from 'react';
+
+export function UpdatesCheckbox() {
+  const [updates, setUpdates] = useState(false);
+
+  return (
+    <wa-checkbox checked={updates} onchange={(event) => setUpdates(event.target.checked)}>
+      Email me about product updates
+    </wa-checkbox>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `checked={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Read `checked` on `change`.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-checkbox id="updates">Email me about product updates</wa-checkbox>
+
+<script type="module">
+  const checkbox = document.querySelector('#updates');
+  checkbox.addEventListener('change', () => {
+    console.log('updates:', checkbox.checked);
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

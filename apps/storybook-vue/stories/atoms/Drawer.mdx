@@ -1,0 +1,165 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DrawerStories from './Drawer.stories';
+
+<Meta of={DrawerStories} />
+
+# Drawer
+
+A panel that slides in from the edge of the screen. This is Web Awesome's `wa-drawer`, loaded from the CDN and used directly in Vue templates as `<wa-drawer>`, exactly as on a CDN page.
+
+Soar makes two adjustments in `parts.css`, and the component itself is untouched:
+
+1. A wider panel with roomier padding, set through the drawer's own `--size` and `--spacing` properties.
+2. A divider under the header, using `wa-drawer::part(header)`.
+
+Each example starts closed. Use its **Open drawer** button to see it. The controls below change the first example; the drawer then opens over this page, as it would in an app.
+
+<Canvas of={DrawerStories.Default} />
+
+<Controls />
+
+## Placement
+
+`placement` sets the edge the drawer slides in from: `end` (the default), `start`, `top` or `bottom`.
+
+<Canvas of={DrawerStories.Start} />
+
+## Header actions
+
+Put buttons in the `header-actions` slot to show them next to the close button, for example print or open in a new window. Use `appearance="plain"` buttons, and give each icon a `label` so screen readers announce what the button does. In this demo the buttons only log to the **Actions** panel.
+
+```vue
+<wa-drawer :open="open || undefined" label="Invoice INV-1043" @wa-after-hide.self="open = false">
+  <wa-button slot="header-actions" appearance="plain" @click="print">
+    <wa-icon name="print" label="Print invoice"></wa-icon>
+  </wa-button>
+  ...
+</wa-drawer>
+```
+
+<Canvas of={DrawerStories.HeaderActions} />
+
+## Closing
+
+The drawer closes on Escape, on its close button, or on any element inside it with `data-drawer="close"`. Add `light-dismiss` to also close it when the backdrop is clicked.
+
+## Sample code
+
+The same example in each framework. Pick yours.
+
+<wa-tab-group>
+<wa-tab panel="vue">Vue</wa-tab>
+<wa-tab panel="angular">Angular</wa-tab>
+<wa-tab panel="react">React</wa-tab>
+<wa-tab panel="javascript">JavaScript</wa-tab>
+
+<wa-tab-panel name="vue">
+
+`<wa-drawer>` is a custom element, not a Vue component, so `v-model` doesn't work on it. Two things to handle yourself:
+
+- **Keep `open` in sync.** The drawer can close itself, so listen for `wa-after-hide` and set your own `open` back to `false`. Use `.self` so the same event bubbling up from a tooltip or dropdown inside the drawer is ignored.
+- **Bind booleans as `x || undefined`.** If Vue renders the drawer before the CDN script has loaded, it writes attributes, and `false` becomes `open="false"`, which still counts as open. `undefined` removes the attribute.
+
+```vue
+<script setup>
+import { ref } from 'vue';
+const open = ref(false);
+</script>
+
+<template>
+  <wa-button @click="open = true">Open drawer</wa-button>
+  <wa-drawer :open="open || undefined" label="Invoice INV-1043" @wa-after-hide.self="open = false">
+    <p>Contoso · Due 2026-09-15</p>
+    <wa-button slot="footer" data-drawer="close">Close</wa-button>
+  </wa-drawer>
+</template>
+```
+
+</wa-tab-panel>
+<wa-tab-panel name="angular">
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so Angular accepts the `wa-*` tags. Keep `open` in sync: the drawer can close itself, so set it back to `false` on `(wa-after-hide)`.
+
+```ts
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-invoice-drawer',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <wa-button (click)="open.set(true)">Open drawer</wa-button>
+    <wa-drawer label="Invoice INV-1043" [attr.open]="open() ? '' : null" (wa-after-hide)="onHide($event)">
+      <p>Contoso · Due 2026-09-15</p>
+      <wa-button slot="footer" data-drawer="close">Close</wa-button>
+    </wa-drawer>
+  `,
+})
+export class InvoiceDrawerComponent {
+  readonly open = signal(false);
+
+  onHide(event: Event) {
+    if (event.target === event.currentTarget) this.open.set(false);
+  }
+}
+```
+
+Bind on/off attributes with `[attr.open]="x ? '' : null"`: `null` removes the attribute, so `false` never ends up as `open="false"`.
+
+</wa-tab-panel>
+<wa-tab-panel name="react">
+
+React 19 supports custom elements directly; no wrapper is needed. Keep `open` in sync: the drawer can close itself, so set it back to `false` on `onwa-after-hide`.
+
+```jsx
+import { useState } from 'react';
+
+export function InvoiceDrawer() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <wa-button onClick={() => setOpen(true)}>Open drawer</wa-button>
+      <wa-drawer
+        label="Invoice INV-1043"
+        open={open}
+        onwa-after-hide={(event) => event.target === event.currentTarget && setOpen(false)}
+      >
+        <p>Contoso · Due 2026-09-15</p>
+        <wa-button slot="footer" data-drawer="close">Close</wa-button>
+      </wa-drawer>
+    </>
+  );
+}
+```
+
+React 19 handles on/off attributes correctly, even before the CDN script has loaded: `open={false}` leaves the attribute off. In TypeScript, declare the `wa-*` tags for JSX, as `samples/react-vite/src/custom-elements.d.ts` does for Soar Awesome's own components.
+
+</wa-tab-panel>
+<wa-tab-panel name="javascript">
+
+On a page without a framework, load the CDN files and write the markup. Open it by setting `open`; buttons with `data-drawer="close"` close it with no script.
+
+```html
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/webawesome/3.14.0/styles/webawesome.css" />
+<link rel="stylesheet" href="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.css" />
+<script type="module" src="https://cdn.soarawesome.internal/webawesome/3.14.0/webawesome.loader.js"></script>
+<script type="module" src="https://cdn.soarawesome.internal/soarawesome/0.1.0/soarawesome.min.js"></script>
+
+<wa-button id="open-invoice">Open drawer</wa-button>
+<wa-drawer id="invoice" label="Invoice INV-1043">
+  <p>Contoso · Due 2026-09-15</p>
+  <wa-button slot="footer" data-drawer="close">Close</wa-button>
+</wa-drawer>
+
+<script type="module">
+  const drawer = document.querySelector('#invoice');
+  document.querySelector('#open-invoice').addEventListener('click', () => {
+    drawer.open = true;
+  });
+</script>
+```
+
+The four `<link>`/`<script>` tags, with integrity hashes, are in each Soar Awesome release's `snippet.html`; `cdn.soarawesome.internal` stands for your CDN host.
+
+</wa-tab-panel>
+</wa-tab-group>

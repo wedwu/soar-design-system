@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Soar Awesome · CDN sample</title>
+
+  <!-- Same layout as the self-hosted CDN. Run `npm run build`, then `npm run cdn:stage`, first. Then
+         `npm run dev -w sample-cdn-html` (serves the repo root). Production pages use
+         https://cdn.example.com/... (see snippet.html). Keep URLs absolute: WA's loader
+         derives its base path from its own src, and a relative src breaks component loading. -->
+
+  <!-- 1. Web Awesome, self-hosted next to our bundle. It isn't inlined, so there's only one copy. -->
+  <link rel="stylesheet" href="/cdn-release/webawesome/3.14.0/styles/webawesome.css" />
+  <script type="module" src="/cdn-release/webawesome/3.14.0/webawesome.loader.js"></script>
+
+  <!-- 2. Soar: theme + all components in one file each. -->
+  <link rel="stylesheet" href="/cdn-release/soar-awesome/0.1.0/soar-awesome.css" />
+  <script type="module" src="/cdn-release/soar-awesome/0.1.0/soar-awesome.min.js"></script>
+</head>
+
+<body>
+  <main style="max-width: 40rem; margin: 0 auto; padding: var(--wa-space-xl); display: grid; gap: var(--wa-space-l)">
+    <h1>CDN sample</h1>
+    <wa-callout variant="brand">No build step. WA components render through WA's self-hosted loader, and Soar's
+      autoloader asks it for whatever <code>ax-*</code> elements need.</wa-callout>
+    <ax-field label="Display name" required maxlength="24" show-count></ax-field>
+    <ax-data-table id="table" label="Members" filterable selectable></ax-data-table>
+    <wa-button id="dark" appearance="outlined">Toggle dark mode</wa-button>
+  </main>
+  <script type="module">
+    const table = document.getElementById('table');
+    table.columns = [
+      { key: 'name', label: 'Name', sortable: true },
+      { key: 'role', label: 'Role', sortable: true },
+    ];
+    table.rows = [
+      { id: 1, name: 'Ada Lovelace', role: 'Engineer' },
+      { id: 2, name: 'Grace Hopper', role: 'Admiral' },
+    ];
+    document.getElementById('dark').addEventListener('click', () => document.documentElement.classList.toggle('wa-dark'));
+  </script>
+</body>
+
+</html>

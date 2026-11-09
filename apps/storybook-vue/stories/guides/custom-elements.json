@@ -1,0 +1,1311 @@
+{
+  "schemaVersion": "1.0.1",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AxElement",
+          "declaration": {
+            "name": "AxElement",
+            "module": "./internal/ax-element.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AxControlInfo",
+          "declaration": {
+            "name": "AxControlInfo",
+            "module": "./molecules/ax-control-info/ax-control-info.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AxField",
+          "declaration": {
+            "name": "AxField",
+            "module": "./molecules/ax-field/ax-field.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AxDataTable",
+          "declaration": {
+            "name": "AxDataTable",
+            "module": "./organisms/ax-data-table/ax-data-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AxColumn",
+          "declaration": {
+            "name": "AxColumn",
+            "module": "./organisms/ax-data-table/ax-data-table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortDirection",
+          "declaration": {
+            "name": "SortDirection",
+            "module": "./organisms/ax-data-table/ax-data-table.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/ax-element.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Base class for every Soar molecule and organism.\n\nWe compose Web Awesome elements; we never subclass them. WA's element\nclasses and internals are not a public extension API, and subclassing would\ntie every Soar component to WA's private implementation across releases.",
+          "name": "AxElement",
+          "members": [
+            {
+              "kind": "field",
+              "name": "waDependencies",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "[]",
+              "description": "WA tags this component renders. Must match the WA component modules the\nfile imports and the <wa-*> tags in its templates (checked by `npm run check:ownership`).\nThe CDN autoloader uses this list because WA isn't inlined there."
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "hostStyles",
+              "static": true,
+              "default": "css` :host { box-sizing: border-box; font-family: var(--wa-font-family-body); color: var(--wa-color-text-normal); } :host([hidden]) { display: none !important; } *, *::before, *::after { box-sizing: inherit; } `",
+              "description": "Shared host styles. Visual values come from tokens only."
+            },
+            {
+              "kind": "method",
+              "name": "emit",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "`ax-${string}`"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "name",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AxElement",
+          "declaration": {
+            "name": "AxElement",
+            "module": "src/internal/ax-element.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tag",
+          "declaration": {
+            "name": "anonymous_0",
+            "module": "src/internal/ax-element.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/molecules/ax-control-info/ax-control-info.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "WA_LABEL_PROPERTY",
+          "type": {
+            "text": "[\n  'wa-checkbox-group',\n  'wa-color-picker',\n  'wa-input',\n  'wa-number-input',\n  'wa-radio-group',\n  'wa-select',\n  'wa-tag-input',\n  'wa-textarea',\n  'wa-time-input',\n]"
+          },
+          "default": "[ 'wa-checkbox-group', 'wa-color-picker', 'wa-input', 'wa-number-input', 'wa-radio-group', 'wa-select', 'wa-tag-input', 'wa-textarea', 'wa-time-input', ]",
+          "description": "Web Awesome form controls render their real <input> inside their own shadow\nDOM, where an outside <label for> or aria-describedby can't reach it. For\nthese, the label and info text go through WA's public API instead (the\n`label` property or the label slot, and the `hint` property), and\ntheme/src/parts.css visually hides WA's copy using its documented parts.\nKeep these lists in sync with parts.css (a unit test checks it)."
+        },
+        {
+          "kind": "variable",
+          "name": "WA_LABEL_SLOT",
+          "type": {
+            "text": "['wa-checkbox', 'wa-switch']"
+          },
+          "default": "['wa-checkbox', 'wa-switch']"
+        },
+        {
+          "kind": "class",
+          "description": "Molecule: a label and help text (\"info\") for any form control, shown\neither under the label or behind an info button with a tooltip.\n\nThe label, info and control all stay in the page's own DOM (slots). On\nevery slot change the component fills in only what's missing, and leaves\nanything you set yourself alone:\n  - an `id` on the control, and `for` on a slotted `<label>`\n  - native controls: the info element's `id` in `aria-describedby`\n  - Web Awesome controls: the label and info text through WA's own `label`\n    and `hint` API (see WA_LABEL_PROPERTY above). An outside label can't\n    name or describe the input inside WA's shadow DOM.\n  - the required marker, when the control has `required`",
+          "name": "AxControlInfo",
+          "cssProperties": [
+            {
+              "description": "Horizontal layout: preferred width of the label column before wrapping.",
+              "name": "--ax-control-info-label-basis"
+            },
+            {
+              "description": "Horizontal layout: preferred width of the control column before wrapping.",
+              "name": "--ax-control-info-control-basis"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The wrapper around everything.",
+              "name": "base"
+            },
+            {
+              "description": "The row holding the label, required marker and info button.",
+              "name": "label-row"
+            },
+            {
+              "description": "The inline help text container (inline mode only).",
+              "name": "info"
+            },
+            {
+              "description": "The info button (tooltip mode only).",
+              "name": "info-trigger"
+            },
+            {
+              "description": "The container around the slotted control.",
+              "name": "control"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The control's label. Use a `<label>` so clicking it focuses the control.",
+              "name": "label"
+            },
+            {
+              "description": "Help text describing the control.",
+              "name": "info"
+            },
+            {
+              "description": "The control itself (`wa-input`, `wa-switch`, a native `<select>`, ...).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "waDependencies",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['wa-icon', 'wa-tooltip']",
+              "description": "WA tags this component renders. Must match the WA component modules the\nfile imports and the <wa-*> tags in its templates (checked by `npm run check:ownership`).\nThe CDN autoloader uses this list because WA isn't inlined there.",
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "infoDisplay",
+              "privacy": "public",
+              "type": {
+                "text": "'inline' | 'tooltip'"
+              },
+              "default": "'inline'",
+              "description": "Show the info text under the label, or behind an info button.",
+              "attribute": "info-display",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "privacy": "public",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "description": "Stack label above the control, or place them side by side (settings rows).",
+              "attribute": "layout",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "infoLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'More information'",
+              "description": "Accessible name of the info button in tooltip mode.",
+              "attribute": "info-label"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`ax-control-info-${++uid}`"
+            },
+            {
+              "kind": "field",
+              "name": "labelElement",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "infoElement",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "control",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "wire",
+              "description": "Fill in missing ids and ARIA links between label, info and control."
+            },
+            {
+              "kind": "method",
+              "name": "#wireWebAwesome",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "control",
+                  "type": {
+                    "text": "WaControl"
+                  }
+                },
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "info",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hostStyles",
+              "static": true,
+              "default": "css` :host { box-sizing: border-box; font-family: var(--wa-font-family-body); color: var(--wa-color-text-normal); } :host([hidden]) { display: none !important; } *, *::before, *::after { box-sizing: inherit; } `",
+              "description": "Shared host styles. Visual values come from tokens only.",
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emit",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "`ax-${string}`"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "info-display",
+              "type": {
+                "text": "'inline' | 'tooltip'"
+              },
+              "default": "'inline'",
+              "description": "Show the info text under the label, or behind an info button.",
+              "fieldName": "infoDisplay"
+            },
+            {
+              "name": "layout",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "description": "Stack label above the control, or place them side by side (settings rows).",
+              "fieldName": "layout"
+            },
+            {
+              "name": "info-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'More information'",
+              "description": "Accessible name of the info button in tooltip mode.",
+              "fieldName": "infoLabel"
+            }
+          ],
+          "superclass": {
+            "name": "AxElement",
+            "module": "/src/internal/ax-element.js"
+          },
+          "tagName": "ax-control-info",
+          "customElement": true,
+          "events": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "WA_LABEL_PROPERTY",
+          "declaration": {
+            "name": "WA_LABEL_PROPERTY",
+            "module": "src/molecules/ax-control-info/ax-control-info.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "WA_LABEL_SLOT",
+          "declaration": {
+            "name": "WA_LABEL_SLOT",
+            "module": "src/molecules/ax-control-info/ax-control-info.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "AxControlInfo",
+          "declaration": {
+            "name": "AxControlInfo",
+            "module": "src/molecules/ax-control-info/ax-control-info.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/organisms/ax-data-table/ax-data-table.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Organism: a client-side data table with filtering, sorting and row\nselection, composed from WA's input, checkbox and spinner.",
+          "name": "AxDataTable",
+          "cssProperties": [
+            {
+              "description": "Cell padding.",
+              "name": "--ax-data-table-row-padding"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The bordered container.",
+              "name": "frame"
+            },
+            {
+              "description": "The <table> element.",
+              "name": "table"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Toolbar content shown next to the filter (e.g. buttons).",
+              "name": "actions"
+            },
+            {
+              "description": "Shown when there are no rows to display.",
+              "name": "empty"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "waDependencies",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['wa-checkbox', 'wa-input', 'wa-spinner']",
+              "description": "WA tags this component renders. Must match the WA component modules the\nfile imports and the <wa-*> tags in its templates (checked by `npm run check:ownership`).\nThe CDN autoloader uses this list because WA isn't inlined there.",
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "privacy": "public",
+              "type": {
+                "text": "AxColumn<Row>[]"
+              },
+              "default": "[]",
+              "description": "Column definitions: key, label, and optional sorting, alignment and formatting."
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "privacy": "public",
+              "type": {
+                "text": "Row[]"
+              },
+              "default": "[]",
+              "description": "The data. Filtering and sorting happen in the browser."
+            },
+            {
+              "kind": "field",
+              "name": "rowKey",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'id'",
+              "description": "The row field that uniquely identifies a row. Used for selection keys.",
+              "attribute": "row-key"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name for the table.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a checkbox on each row, plus a select-all checkbox.",
+              "attribute": "selectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "filterable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a filter box that searches every column.",
+              "attribute": "filterable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading overlay, for example while rows are fetched.",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "emptyLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No results'",
+              "description": "Text shown when there are no rows to display.",
+              "attribute": "empty-label"
+            },
+            {
+              "kind": "field",
+              "name": "sortKey",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The column key the table is sorted by. Empty means unsorted.",
+              "attribute": "sort-key"
+            },
+            {
+              "kind": "field",
+              "name": "sortDirection",
+              "privacy": "public",
+              "type": {
+                "text": "SortDirection"
+              },
+              "default": "'soaring'",
+              "description": "Sort order for `sort-key`.",
+              "attribute": "sort-direction"
+            },
+            {
+              "kind": "field",
+              "name": "filter",
+              "privacy": "protected",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "filter"
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "privacy": "protected",
+              "default": "new Set<string>()",
+              "attribute": "selected"
+            },
+            {
+              "kind": "field",
+              "name": "visibleRows",
+              "type": {
+                "text": "Row[]"
+              },
+              "description": "Rows after filter and sort, in display order.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "selectedKeys",
+              "type": {
+                "text": "string[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "sortBy",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#keyOf",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setSelected",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "Set<string>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#toggleRow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                },
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#toggleAll",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "rows",
+                  "type": {
+                    "text": "Row[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderHeader",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "col",
+                  "type": {
+                    "text": "AxColumn<Row>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderRow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hostStyles",
+              "static": true,
+              "default": "css` :host { box-sizing: border-box; font-family: var(--wa-font-family-body); color: var(--wa-color-text-normal); } :host([hidden]) { display: none !important; } *, *::before, *::after { box-sizing: inherit; } `",
+              "description": "Shared host styles. Visual values come from tokens only.",
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emit",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "`ax-${string}`"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "detail: { key, direction }",
+              "name": "ax-sort-change"
+            },
+            {
+              "description": "detail: { keys: string[] }",
+              "name": "ax-selection-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "row-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "'id'",
+              "description": "The row field that uniquely identifies a row. Used for selection keys.",
+              "fieldName": "rowKey"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name for the table.",
+              "fieldName": "label"
+            },
+            {
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a checkbox on each row, plus a select-all checkbox.",
+              "fieldName": "selectable"
+            },
+            {
+              "name": "filterable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a filter box that searches every column.",
+              "fieldName": "filterable"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading overlay, for example while rows are fetched.",
+              "fieldName": "loading"
+            },
+            {
+              "name": "empty-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No results'",
+              "description": "Text shown when there are no rows to display.",
+              "fieldName": "emptyLabel"
+            },
+            {
+              "name": "sort-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The column key the table is sorted by. Empty means unsorted.",
+              "fieldName": "sortKey"
+            },
+            {
+              "name": "sort-direction",
+              "type": {
+                "text": "SortDirection"
+              },
+              "default": "'soaring'",
+              "description": "Sort order for `sort-key`.",
+              "fieldName": "sortDirection"
+            }
+          ],
+          "superclass": {
+            "name": "AxElement",
+            "module": "/src/internal/ax-element.js"
+          },
+          "tagName": "ax-data-table",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AxDataTable",
+          "declaration": {
+            "name": "AxDataTable",
+            "module": "src/organisms/ax-data-table/ax-data-table.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/molecules/ax-field/ax-field.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Molecule: a text field with Soar's validation pattern. Wraps <wa-input>\nand adds what WA doesn't do: an error message that appears after the user\nleaves the field (not while typing), a live character counter, and\nparticipation in the *outer* form (a wa-input inside our shadow root is\ninvisible to the page's <form>, so ax-field is form-associated itself).\nThe error renders through wa-input's own hint, so WA's aria-describedby\nwiring announces it.",
+          "name": "AxField",
+          "cssParts": [
+            {
+              "description": "The wrapper around the input and the meta row.",
+              "name": "base"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "waDependencies",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "default": "['wa-input']",
+              "description": "WA tags this component renders. Must match the WA component modules the\nfile imports and the <wa-*> tags in its templates (checked by `npm run check:ownership`).\nThe CDN autoloader uses this list because WA isn't inlined there.",
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The field's label, shown above the input.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "hint",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text under the input. Replaced by the error message when the field is invalid.",
+              "attribute": "hint"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name submitted with the form.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "type": {
+                "text": "'text' | 'email' | 'tel' | 'url' | 'search' | 'password'"
+              },
+              "default": "'text'",
+              "description": "The kind of text the field accepts.",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Example text shown while the field is empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The field must have a value before the form submits.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The field can't be edited or focused, and isn't submitted.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of characters. Longer values are invalid.",
+              "attribute": "maxlength"
+            },
+            {
+              "kind": "field",
+              "name": "showCount",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a live character count (needs `maxlength`).",
+              "attribute": "show-count"
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Server-side or custom error. Takes precedence over built-in validation.",
+              "attribute": "error"
+            },
+            {
+              "kind": "field",
+              "name": "requiredMessage",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'This field is required.'",
+              "description": "Error shown when a required field is empty.",
+              "attribute": "required-message"
+            },
+            {
+              "kind": "field",
+              "name": "touched",
+              "privacy": "protected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "touched"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals | undefined"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity"
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity"
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback"
+            },
+            {
+              "kind": "method",
+              "name": "#onInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#commit",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hostStyles",
+              "static": true,
+              "default": "css` :host { box-sizing: border-box; font-family: var(--wa-font-family-body); color: var(--wa-color-text-normal); } :host([hidden]) { display: none !important; } *, *::before, *::after { box-sizing: inherit; } `",
+              "description": "Shared host styles. Visual values come from tokens only.",
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emit",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "`ax-${string}`"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "AxElement",
+                "module": "src/internal/ax-element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "Value committed (blur or Enter). detail: { value }",
+              "name": "ax-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The field's label, shown above the input.",
+              "fieldName": "label"
+            },
+            {
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text under the input. Replaced by the error message when the field is invalid.",
+              "fieldName": "hint"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Name submitted with the form.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value.",
+              "fieldName": "value"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'text' | 'email' | 'tel' | 'url' | 'search' | 'password'"
+              },
+              "default": "'text'",
+              "description": "The kind of text the field accepts.",
+              "fieldName": "type"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Example text shown while the field is empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The field must have a value before the form submits.",
+              "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The field can't be edited or focused, and isn't submitted.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "maxlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of characters. Longer values are invalid.",
+              "fieldName": "maxlength"
+            },
+            {
+              "name": "show-count",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a live character count (needs `maxlength`).",
+              "fieldName": "showCount"
+            },
+            {
+              "name": "error",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Server-side or custom error. Takes precedence over built-in validation.",
+              "fieldName": "error"
+            },
+            {
+              "name": "required-message",
+              "type": {
+                "text": "string"
+              },
+              "default": "'This field is required.'",
+              "description": "Error shown when a required field is empty.",
+              "fieldName": "requiredMessage"
+            }
+          ],
+          "superclass": {
+            "name": "AxElement",
+            "module": "/src/internal/ax-element.js"
+          },
+          "tagName": "ax-field",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AxField",
+          "declaration": {
+            "name": "AxField",
+            "module": "src/molecules/ax-field/ax-field.ts"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "button-group" },
+  "label": "Alignment",
+  "buttons": ["Left", "Center", "Right"],
+  "vertical": { "label": "Options" },
+  "toolbar": {
+    "label": "Text formatting",
+    "buttons": [
+      { "icon": "bold", "label": "Bold" },
+      { "icon": "italic", "label": "Italic" },
+      { "icon": "underline", "label": "Underline" }
+    ]
+  },
+  "split": {
+    "label": "Save options",
+    "main": "Save",
+    "menuLabel": "More save options",
+    "items": [
+      { "value": "draft", "text": "Save as draft" },
+      { "value": "template", "text": "Save as template" }
+    ]
+  }
+}

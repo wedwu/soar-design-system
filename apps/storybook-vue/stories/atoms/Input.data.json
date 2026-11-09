@@ -1,0 +1,21 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "input" },
+  "label": "Project name",
+  "hint": "Shown on invoices",
+  "placeholder": "Apollo",
+  "types": [
+    { "type": "email", "label": "Email", "placeholder": "ada@example.com" },
+    { "type": "password", "label": "Password", "password-toggle": true },
+    { "type": "search", "label": "Search", "with-clear": true, "value": "invoices" },
+    { "type": "number", "label": "Seats", "value": "5" }
+  ],
+  "withIcons": [
+    { "label": "Search", "startIcon": "magnifying-glass" },
+    { "label": "Website", "placeholder": "example.com", "startText": "https://" }
+  ],
+  "states": [
+    { "label": "Required", "required": true },
+    { "label": "Disabled", "disabled": true, "value": "Can't edit this" },
+    { "label": "Read-only", "readonly": true, "value": "Copy me" }
+  ]
+}

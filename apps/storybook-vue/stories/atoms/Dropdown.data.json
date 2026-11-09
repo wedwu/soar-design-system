@@ -1,0 +1,47 @@
+{
+  "design": { "figmaNodeId": "", "webAwesomeDocs": "dropdown" },
+  "trigger": "Actions",
+  "items": [
+    { "value": "edit", "icon": "pen", "text": "Edit" },
+    { "value": "duplicate", "icon": "copy", "text": "Duplicate", "details": "⌘D" },
+    { "value": "archive", "icon": "box-archive", "text": "Archive", "disabled": true },
+    { "divider": true },
+    { "value": "delete", "icon": "trash", "text": "Delete", "variant": "danger" }
+  ],
+  "checkable": {
+    "trigger": "View",
+    "items": [
+      { "value": "grid", "text": "Show grid", "checked": true },
+      { "value": "rulers", "text": "Show rulers" },
+      { "value": "guides", "text": "Show guides", "checked": true }
+    ]
+  },
+  "submenu": {
+    "trigger": "Export",
+    "parent": "Format",
+    "children": [
+      { "value": "pdf", "text": "PDF" },
+      { "value": "csv", "text": "CSV" },
+      { "value": "xlsx", "text": "Excel spreadsheet" }
+    ],
+    "after": { "value": "email", "text": "Email a copy" }
+  },
+  "limitations": {
+    "links": {
+      "dontTrigger": "Don't: plain links",
+      "doTrigger": "Do: link items",
+      "items": [
+        { "value": "billing", "text": "Billing", "href": "#billing" },
+        { "value": "team", "text": "Team", "href": "#team" }
+      ]
+    },
+    "list": {
+      "dontTrigger": "Don't: items in a list",
+      "doTrigger": "Do: items and a divider",
+      "groups": [
+        [{ "value": "edit", "text": "Edit" }, { "value": "duplicate", "text": "Duplicate" }],
+        [{ "value": "delete", "text": "Delete", "variant": "danger" }]
+      ]
+    }
+  }
+}

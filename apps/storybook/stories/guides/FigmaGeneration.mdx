@@ -1,0 +1,76 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import '../../src/figma-workbench';
+
+<Meta title="Guides/Figma Generation" />
+
+# Figma generation
+
+Every visual value in Soar Awesome is **generated from Figma variables**. Nobody types colors or sizes into the code. This page explains how a change in Figma becomes CSS, and has a workbench for looking up tokens, retrieving live data from Figma, and trying out new variables.
+
+## Workbench
+
+<ax-docs-figma-workbench></ax-docs-figma-workbench>
+
+- **Look up a token:** find any token by its Figma name, CSS variable or Web Awesome property, and see its values in each mode, what it resolves to, which Web Awesome properties it drives, and the code generated from it.
+- **Retrieve from Figma:** paste a Figma file link and a [personal access token](https://help.figma.com/hc/en-us/articles/8085703771159) to pull the live variables, then see exactly what changed compared with the repo. You can download the result as `export.json`. No API access? Export the variables with a Figma plugin and use **Load a JSON export**.
+- **Add a variable:** sketch a new variable and see what the pipeline would generate before anyone touches Figma. **Add to this page** adds it to this page's working copy, so you can look it up. **Create in Figma** writes it to the real file using your token, and asks you to confirm first.
+
+The workbench runs the **same code** as the repo's command-line tools, so its results match what `npm run figma:pull` and `npm run tokens` produce.
+
+**Access requirements:** Figma's Variables API needs an **Enterprise** seat. Reading needs a token with the `file_variables:read` scope, and **Create in Figma** needs `file_variables:write`. Your token is kept only in this page's memory, is sent only to `api.figma.com`, and is never saved.
+
+## The pipeline
+
+```
+Figma variables
+   │  npm run figma:pull            (or the daily "Figma sync" pull request)
+   ▼
+packages/tokens/figma/export.json      raw Figma data, sorted so diffs only show real changes
+   │  npm run tokens
+   ▼
+normalize      names → CSS variables:  color/brand/50 → --ax-color-brand-50
+               Figma numbers → units:  space 16 → 1rem,  duration 160 → 160ms
+               modes → light / dark / base,  aliases stay as var(--ax-…)
+   ▼
+build          tokens.css  light.css  dark.css   the --ax-* values
+               webawesome.css                    --wa-* = var(--ax-*) for every *owned* property
+               tokens.js  _tokens.scss  tokens.dtcg.json  breakpoints.css  _breakpoints.scss
+   ▼
+packages/theme/src/*.css               committed, so the pull request shows the CSS diff
+   ▼
+checks         npm run check:ownership   every alias target exists, no raw values, parts exist…
+               npm test              contrast (AA) on what actually renders, ramp order…
+```
+
+## How Figma names become code
+
+<table>
+  <thead>
+    <tr><th>In Figma</th><th>Becomes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Variable <code>color/brand/50</code></td><td>CSS variable <code>--ax-color-brand-50</code>, SCSS <code>$ax-color-brand-50</code>, JS <code>tokens['color/brand/50']</code></td></tr>
+    <tr><td>A collection with <strong>Light</strong> and <strong>Dark</strong> modes</td><td>Values in <code>light.css</code> and <code>dark.css</code>, switched with Web Awesome's <code>wa-dark</code> class</td></tr>
+    <tr><td>A collection with one mode</td><td>One value in <code>tokens.css</code></td></tr>
+    <tr><td>A variable that aliases another</td><td><code>var(--ax-…)</code>, so the chain stays visible in devtools</td></tr>
+    <tr><td>Number in <code>space/</code>, <code>radius/</code>, <code>font/size/</code>, <code>breakpoint/</code></td><td><code>rem</code> (value ÷ 16)</td></tr>
+    <tr><td>Number in <code>motion/duration/</code></td><td><code>ms</code></td></tr>
+    <tr><td>Number in <code>font/weight/</code> or <code>font/line-height/</code></td><td>Unitless</td></tr>
+  </tbody>
+</table>
+
+## Making a variable drive Web Awesome
+
+A new Figma variable becomes an `--ax-*` token automatically, but it **doesn't change any component** until someone maps it. Mapping is a decision, and it's reviewed:
+
+1. Add a line to `packages/tokens/src/alias-map.mjs`, for example `'--wa-color-surface-raised': 'color/surface/raised'`.
+2. Remove that property from `inherited.json`.
+3. Run `npm run verify`, which regenerates the tokens, runs the fast audit and runs the tests.
+
+The contrast tests then check the new value against everything it appears with.
+
+## What's protected
+
+- **Renames and deletions in Figma.** If a variable that Web Awesome depends on is renamed or deleted, the sync is marked **blocking** instead of silently falling back to Web Awesome's default.
+- **Hand edits.** Edits to generated CSS fail CI (`npm run tokens:check`).
+- **Contrast.** Contrast below WCAG AA fails the token tests, before it reaches a component.
